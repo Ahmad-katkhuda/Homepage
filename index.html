@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 5. SEO & Readability: Added Meta Description -->
-    <meta name="description" content="Microsoft Dynamics 365 SCM Technical Consultant (X++, C#). Specializing in performance optimization, architecture, and agile DevOps for manufacturing and distribution enterprises.">
+    <meta name="description" content="Microsoft-Certified Dynamics 365 SCM Technical Consultant (X++, C#). Specializing in performance optimization, architecture, and agile DevOps for manufacturing and distribution enterprises.">
     <title>Ahmad Katkhuda | D365 SCM Technical Consultant</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,12 +20,37 @@
             --color-accent: #009B77; /* Dynamics Green/Teal */
             --color-medium: #F5F5F7; /* Subtle light gray for dividers/sections */
             --color-secondary-bg: #EAEAEA; /* Secondary Accent for background shift */
-            --color-arabic-border: #B8860B; /* Subtle Gold/Olive tone for geometric pattern */
+            --color-gold: #B8860B; /* Deep Gold/Olive tone */
+            --color-gold-light: #FFD700; /* Bright Gold */
+            --color-mosaic-dark: #3A3A3A; /* Deep Gray for contrast */
+            --color-mosaic-light: #F0F0F0; /* Ivory/White for contrast */
+            /* New colors derived from the provided SVG */
+            --color-mosaic-orange: #f39c4a;
+            --color-mosaic-blue: #4aa3f3;
+            --color-mosaic-green: #2cc3a3;
+            --color-mosaic-purple: #a66de6;
         }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--color-light); 
+            scroll-behavior: smooth; /* Ensure smooth scrolling on all anchor clicks */
+            /* Removed scroll-padding-top from body */
         }
+        
+        /* NEW SCROLL FIX: Apply padding to sections instead of body */
+        /* This prevents the sticky header from hiding the H2 text after navigation */
+        section[id] {
+            padding-top: 1.5rem; /* Default padding for mobile (adjusts based on header size) */
+            margin-top: -1.5rem; /* Pulls section back up to maintain overall layout flow */
+        }
+        /* Desktop adjustment for perfect alignment */
+        @media (min-width: 1024px) {
+            section[id] {
+                padding-top: 3.5rem; /* Safe padding to fully clear the fixed header on desktop */
+                margin-top: -3.5rem;
+            }
+        }
+        
         .header-bg {
             background-color: var(--color-dark); 
         }
@@ -40,32 +65,6 @@
             background-color: var(--color-accent);
         }
 
-        /* NEW: Geometric Frame Element using Pure CSS Gradient */
-        .geometric-frame {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: 20px; /* Width of the border element */
-            /* Using repeating linear gradients to simulate an angular geometric pattern */
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(184, 134, 11, 0.2), 
-                rgba(184, 134, 11, 0.2) 2px,
-                transparent 2px,
-                transparent 10px
-            ), repeating-linear-gradient(
-                -45deg,
-                rgba(184, 134, 11, 0.2),
-                rgba(184, 134, 11, 0.2) 2px,
-                transparent 2px,
-                transparent 10px
-            );
-            background-size: 20px 20px; /* Size of the repeating unit */
-            opacity: 0.6; 
-            z-index: 0;
-        }
-
         /* RTL support for Arabic section */
         .rtl {
             direction: rtl;
@@ -78,12 +77,6 @@
             justify-content: flex-end;
             text-align: right;
         }
-        /* NEW: Flip the geometric border for Arabic RTL mode */
-        .rtl .geometric-frame {
-            left: auto; /* Remove left positioning */
-            right: 0;  /* Place on the right */
-        }
-
         /* Large, centered hero text style */
         .hero-title {
             font-size: 2.5rem;
@@ -139,6 +132,47 @@
         #content-ar {
             font-family: 'Cairo', 'Inter', sans-serif;
         }
+
+        /* NEW: Damascus Mosaic Logo Styling from user input */
+        .piece{
+            transition:transform .35s cubic-bezier(.2,.9,.25,1),filter .35s;
+            transform-origin:center
+        }
+        .piece:hover{
+            transform:translateY(-2px) scale(1.05); /* Adjusted scale for smaller header icon */
+            filter:brightness(1.08);
+        }
+        .seam{
+            stroke:var(--color-dark); /* Using main dark color for seams */
+            stroke-width:1
+        }
+
+        /* FIX 1: Language Dropdown - Use larger target area for hover effect */
+        .group:hover .dropdown-content {
+            opacity: 1;
+            pointer-events: auto;
+            /* Added margin-top to bridge the gap between button and dropdown */
+            margin-top: 0;
+        }
+        .dropdown-content {
+            /* Initial state matches old class, ensuring transition remains smooth */
+            opacity: 0; 
+            pointer-events: none;
+            transition: opacity 0.2s, margin-top 0.2s; 
+        }
+
+        /* FIX 1: Footer Language Dropdown - Use larger target area for hover effect */
+        .group:hover .footer-dropdown-content {
+             opacity: 1;
+             pointer-events: auto;
+             /* Added margin-bottom to bridge the gap between button and dropdown */
+             margin-bottom: 0; 
+        }
+        .footer-dropdown-content {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, margin-bottom 0.2s;
+        }
     </style>
     <!-- Arabic Font Import -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
@@ -152,13 +186,20 @@
 
         // 4. Language Versions: Function to switch content blocks
         function switchLanguage(lang) {
-            // Hide all content blocks
-            document.getElementById('content-en').classList.add('hidden');
-            document.getElementById('content-de').classList.add('hidden');
-            document.getElementById('content-ar').classList.add('hidden');
+            const contentEn = document.getElementById('content-en');
+            const contentDe = document.getElementById('content-de');
+            const contentAr = document.getElementById('content-ar');
+            
+            // Safety check: Only try to hide if the element exists (Fixes the TypeError)
+            if (contentEn) contentEn.classList.add('hidden');
+            if (contentDe) contentDe.classList.add('hidden');
+            if (contentAr) contentAr.classList.add('hidden');
 
             // Show selected content block
-            document.getElementById(`content-${lang}`).classList.remove('hidden');
+            const selectedContent = document.getElementById(`content-${lang}`);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+            }
 
             // Set body direction and alignment based on language
             const body = document.body;
@@ -178,7 +219,10 @@
             }
             
             // Update the display for the desktop language switcher
-            document.getElementById('current-lang-display').textContent = lang.toUpperCase();
+            const currentLangDisplay = document.getElementById('current-lang-display');
+            if (currentLangDisplay) {
+                currentLangDisplay.textContent = lang.toUpperCase();
+            }
         }
 
         // Initialize on load
@@ -203,6 +247,7 @@
                 }
             };
             scrollToTopBtn.onclick = function() {
+                // Use built-in scroll behavior
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
@@ -217,32 +262,79 @@
             
             <div class="flex justify-between items-center h-16">
                 <!-- Logo & Brand -->
-                <a href="#hero" class="flex-shrink-0 flex items-center space-x-3">
-                    <div class="flex items-center space-x-1">
-                        <!-- Microsoft Logo (Simplified SVG) -->
-                        <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="10" height="10" x="1" y="1" rx="1" ry="1" class="text-white fill-current"/>
-                            <rect width="10" height="10" x="13" y="1" rx="1" ry="1" class="text-white fill-current"/>
-                            <rect width="10" height="10" x="1" y="13" rx="1" ry="1" class="text-white fill-current"/>
-                            <rect width="10" height="10" x="13" y="13" rx="1" ry="1" class="text-white fill-current"/>
-                        </svg>
-                        <!-- Dynamics 365 SCM Icon (Green/Teal accent) -->
-                        <svg class="h-5 w-5 dynamic-accent fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM12 8l4 4-4 4-4-4 4-4z"/>
-                        </svg>
-                    </div>
-                    <!-- 1. Positioning & Messaging: Tagline under name -->
+                <!-- Use the Hero section ID, browser handles the smooth scroll because of the body CSS -->
+                <a href="#hero-en" class="flex-shrink-0 flex items-center space-x-3"> 
+                    <!-- NEW: Intricate Damascus Mosaic Microsoft Logo (Integrated SVG) -->
+                    <svg class="h-8 w-8" viewBox="0 0 440 440" role="img" aria-labelledby="logoTitle logoDesc">
+                        <title id="logoTitle">Damascus Mosaic Four-Square Logo</title>
+                        <desc id="logoDesc">Four rounded squares arranged 2 by 2. Each square is filled with small geometric shards creating a Damascus mosaic look.</desc>
+                        <defs>
+                            <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.45" />
+                            </filter>
+                            <clipPath id="roundClip">
+                                <rect x="0" y="0" width="200" height="200" rx="18" ry="18" />
+                            </clipPath>
+                        </defs>
+                        <!-- Top-Left Square (Orange/Gold) -->
+                        <g transform="translate(10,10)" filter="url(#softShadow)">
+                            <rect x="0" y="0" width="200" height="200" rx="18" fill="var(--color-mosaic-orange)" opacity="0.12" />
+                            <g clip-path="url(#roundClip)">
+                                <polygon class="piece seam" points="0,0 90,0 60,55 0,40" fill="#f7b77a"/>
+                                <polygon class="piece seam" points="90,0 200,0 200,80 150,60 60,55" fill="var(--color-mosaic-orange)"/>
+                                <polygon class="piece seam" points="0,40 60,55 40,120 0,100" fill="#e68b3e"/>
+                                <polygon class="piece seam" points="60,55 150,60 120,130 40,120" fill="#d6732f"/>
+                                <polygon class="piece seam" points="0,100 40,120 0,200" fill="#c85f26"/>
+                                <polygon class="piece seam" points="120,130 200,80 200,200 0,200 40,120" fill="#d9823b"/>
+                            </g>
+                        </g>
+                        <!-- Top-Right Square (Blue) -->
+                        <g transform="translate(230,10)" filter="url(#softShadow)">
+                            <rect x="0" y="0" width="200" height="200" rx="18" fill="var(--color-mosaic-blue)" opacity="0.12" />
+                            <g clip-path="url(#roundClip)">
+                                <polygon class="piece seam" points="200,0 110,0 150,55 200,40" fill="#bfe6ff"/>
+                                <polygon class="piece seam" points="110,0 0,0 0,80 50,60 150,55" fill="#8fd0ff"/>
+                                <polygon class="piece seam" points="200,40 150,55 180,120 200,100" fill="#6ab6ff"/>
+                                <polygon class="piece seam" points="50,60 0,80 40,130 120,110" fill="var(--color-mosaic-blue)"/>
+                                <polygon class="piece seam" points="40,130 120,110 200,200 0,200" fill="#2d82c9"/>
+                            </g>
+                        </g>
+                        <!-- Bottom-Left Square (Green/Teal) -->
+                        <g transform="translate(10,230)" filter="url(#softShadow)">
+                            <rect x="0" y="0" width="200" height="200" rx="18" fill="var(--color-mosaic-green)" opacity="0.12" />
+                            <g clip-path="url(#roundClip)">
+                                <polygon class="piece seam" points="0,0 80,10 60,70 0,60" fill="#9ef1d8"/>
+                                <polygon class="piece seam" points="80,10 200,0 180,90 120,70 60,70" fill="#5fe0bb"/>
+                                <polygon class="piece seam" points="0,60 60,70 40,140 0,120" fill="#36caa3"/>
+                                <polygon class="piece seam" points="60,70 120,70 160,150 40,140" fill="#26b892"/>
+                                <polygon class="piece seam" points="40,140 160,150 200,200 0,200" fill="var(--color-mosaic-green)"/>
+                            </g>
+                        </g>
+                        <!-- Bottom-Right Square (Purple/Violet) -->
+                        <g transform="translate(230,230)" filter="url(#softShadow)">
+                            <rect x="0" y="0" width="200" height="200" rx="18" fill="var(--color-mosaic-purple)" opacity="0.12" />
+                            <g clip-path="url(#roundClip)">
+                                <polygon class="piece seam" points="200,0 140,0 160,60 200,50" fill="#e5c7ff"/>
+                                <polygon class="piece seam" points="140,0 0,0 10,70 90,60 160,60" fill="#caa0ff"/>
+                                <polygon class="piece seam" points="10,70 90,60 60,140 0,120" fill="#a876e6"/>
+                                <polygon class="piece seam" points="90,60 160,60 180,140 60,140" fill="#8b53d9"/>
+                                <polygon class="piece seam" points="60,140 180,140 200,200 0,200" fill="var(--color-mosaic-purple)"/>
+                            </g>
+                        </g>
+                    </svg>
+                    <!-- END NEW LOGO -->
                     <span class="font-semibold text-lg tracking-wide hidden sm:inline-block">Ahmad Katkhuda</span>
                     <span class="text-xs font-light tracking-wider text-gray-400 hidden lg:inline-block">| D365 SCM Technical Consultant</span>
                 </a>
                 
                 <!-- Desktop Navigation Links -->
                 <nav class="hidden lg:flex lg:space-x-8">
-                    <a href="#modules" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Modules</a>
-                    <a href="#services" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Services</a>
-                    <a href="#toolkit" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Toolkit</a>
-                    <a href="#about" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">About</a>
-                    <a href="#contact" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Contact</a>
+                    <!-- Links point to the language-specific ID (e.g., #modules-en). The browser handles the scroll. -->
+                    <a href="#modules-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Modules</a>
+                    <a href="#services-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Services</a>
+                    <a href="#toolkit-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Toolkit</a>
+                    <a href="#about-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">About</a>
+                    <a href="#contact-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Contact</a>
                 </nav>
 
                 <!-- 3. Navigation: Desktop Language Switcher (New) -->
@@ -251,8 +343,8 @@
                         <i data-lucide="globe" class="w-5 h-5"></i>
                         <span class="ml-1 text-sm font-medium uppercase" id="current-lang-display">EN</span>
                     </button>
-                    <!-- Dropdown Content -->
-                    <div class="absolute right-0 top-full mt-2 w-32 bg-white rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
+                    <!-- Dropdown Content (FIX 1: Custom class for wider hover tolerance) -->
+                    <div class="absolute right-0 top-full mt-0 w-32 bg-white rounded-lg shadow-xl dropdown-content origin-top">
                         <a href="#en" onclick="switchLanguage('en');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">English</a>
                         <a href="#de" onclick="switchLanguage('de');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">Deutsch</a>
                         <a href="#ar" onclick="switchLanguage('ar');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">العربية</a>
@@ -272,11 +364,12 @@
             
             <!-- Mobile Menu Dropdown -->
             <nav id="mobile-menu" class="lg:hidden text-base">
-                <a href="#modules" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
-                <a href="#services" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
-                <a href="#toolkit" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
-                <a href="#about" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
-                <a href="#contact" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
+                <!-- Mobile links point to the current language sections based on the active language -->
+                <a href="#modules-en" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
+                <a href="#services-en" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
+                <a href="#toolkit-en" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
+                <a href="#about-en" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
+                <a href="#contact-en" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
             
                 <!-- Mobile Language Switcher -->
                 <div class="mt-4 pt-4 border-t border-gray-700">
@@ -291,16 +384,13 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Multilingual Content Containers -->
-        <!-- The geometric pattern element is positioned relative to the main content wrapper -->
         <div class="relative">
-            <!-- Geometric Frame Element -->
-            <div class="geometric-frame hidden lg:block"></div>
             
             <!-- ENGLISH CONTENT (Default) -->
             <div id="content-en" class="relative z-10">
-                <div class="lg:ml-[30px]"> <!-- Push content away from the geometric frame (20px frame + 10px spacing) -->
+                <div class="lg:ml-0"> <!-- Removed margin push -->
                     <!-- Hero Section -->
-                    <section id="hero" class="text-center py-20 sm:py-32">
+                    <section id="hero-en" class="text-center py-20 sm:py-32">
                         <p class="text-lg font-light text-gray-500 mb-4">Freelance Technical Consulting | Hamburg, Germany</p>
                         <!-- 1. Positioning & Messaging: Refined Hero Title -->
                         <h1 class="hero-title text-black max-w-5xl mx-auto">
@@ -320,7 +410,7 @@
                     <hr class="border-t border-gray-200 my-16">
                     
                     <!-- D365 SCM Modules (Processes) -->
-                    <section id="modules" class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
+                    <section id="modules-en" class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <h2 class="text-4xl font-semibold text-center mb-12">
                             Core D365 SCM Expertise: Functional Modules
                         </h2>
@@ -372,7 +462,7 @@
                     </section>
                     
                     <!-- Service Pillars -->
-                    <section id="services" class="py-20">
+                    <section id="services-en" class="py-20">
                         <h2 class="text-4xl font-semibold text-center mb-6">
                             My Technical Service Pillars
                         </h2>
@@ -402,7 +492,7 @@
                     </section>
                     
                     <!-- Technical Toolkit (Icon Grid) -->
-                    <section id="toolkit" class="py-16 bg-white">
+                    <section id="toolkit-en" class="py-16 bg-white">
                         <h2 class="text-4xl font-semibold text-center mb-6">
                             Technical Toolkit
                         </h2>
@@ -423,7 +513,7 @@
                     </section>
 
                     <!-- 2. Humanization & Trust: About Section -->
-                    <section id="about" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
+                    <section id="about-en" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <div class="grid lg:grid-cols-3 gap-12 items-center">
                             <!-- Image Column -->
                             <div class="lg:col-span-1 flex justify-center">
@@ -454,7 +544,7 @@
                     </section>
 
                     <!-- Contact/CTA Section -->
-                    <section id="contact" class="text-center py-20">
+                    <section id="contact-en" class="text-center py-20">
                         <h2 class="text-4xl font-semibold mb-6">
                             Ready to Optimize Your Supply Chain?
                         </h2>
@@ -470,7 +560,7 @@
 
             <!-- GERMAN CONTENT -->
             <div id="content-de" class="hidden relative z-10">
-                <div class="lg:ml-[30px]"> <!-- Push content away from the geometric frame (20px frame + 10px spacing) -->
+                <div class="lg:ml-0"> <!-- Removed margin push -->
                     <!-- Hero Section -->
                     <section id="hero-de" class="text-center py-20 sm:py-32">
                         <p class="text-lg font-light text-gray-500 mb-4">Freiberufliche Technische Beratung | Hamburg, Deutschland</p>
@@ -490,7 +580,7 @@
 
                     <hr class="border-t border-gray-200 my-16">
                     
-                    <!-- D365 SCM Module (Processes) -->
+                    <!-- D365 SCM Modules (Processes) -->
                     <section id="modules-de" class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <h2 class="text-4xl font-semibold text-center mb-12">
                             Kernkompetenz D365 SCM: Funktionale Module
@@ -607,7 +697,7 @@
                                     Ich bin ein engagierter Senior Technical Consultant mit über acht Jahren fundierter Erfahrung im Microsoft Dynamics ERP-Ökosystem, spezialisiert auf die technische Architektur und Entwicklung von Dynamics 365 Finance & Supply Chain Management.
                                 </p>
                                 <p class="text-lg font-light text-gray-700 mb-4">
-                                    Meine besondere Stärke liegt in der integrativen Begleitung und Gestaltung von End-to-End-Prozessen (insbesondere in Produktion, Beschaffung und Vertrieb), indem ich tiefgehendes technisches Know-how in X++ und SQL mit einem ausgeprägten Verständnis für Geschäftsprozessoptimierung kombiniere. Mein Fokus liegt auf der Bereitstellung robuster, hoch performanter und solide Lösungen.
+                                    Meine besondere Stärke liegt in der integrativen Begleitung und Gestaltung von End-to-End-Prozessen (insbesondere in Produktion, Beschaffung und Vertrieb), indem ich tiefgehendes technisches Know-how in X++ und SQL mit einem ausgeprägten Verständnis für Geschäftsprozessoptimierung kombiniere. Mein Fokus liegt auf der Bereitstellung robuster, hoch performanter und architektonisch solider Lösungen.
                                 </p>
                                 
                                 <div class="mt-6 flex flex-wrap gap-4">
@@ -636,7 +726,7 @@
 
             <!-- ARABIC CONTENT -->
             <div id="content-ar" class="hidden rtl relative z-10">
-                <div class="lg:mr-[30px]"> <!-- Push content away from the geometric frame (20px frame + 10px spacing) -->
+                <div class="lg:mr-0"> <!-- Removed margin push -->
                     <!-- Hero Section -->
                     <section id="hero-ar" class="text-center py-20 sm:py-32">
                         <p class="text-lg font-light text-gray-500 mb-4">استشارات فنية مستقلة | هامبورغ، ألمانيا</p>
@@ -833,8 +923,8 @@
                     <i data-lucide="globe" class="w-5 h-5"></i>
                     <span class="ml-2 text-sm font-medium">Language</span>
                 </button>
-                <!-- Dropdown Content (This will be positioned to open UPWARDS on the footer) -->
-                <div class="absolute bottom-full right-0 mb-2 w-32 bg-white rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto origin-bottom">
+                <!-- Dropdown Content (FIX 1: Custom class for wider hover tolerance) -->
+                <div class="absolute bottom-full right-0 mb-0 w-32 bg-white rounded-lg shadow-xl footer-dropdown-content origin-bottom">
                     <a href="#en" onclick="switchLanguage('en');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">English</a>
                     <a href="#de" onclick="switchLanguage('de');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">Deutsch</a>
                     <a href="#ar" onclick="switchLanguage('ar');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">العربية</a>
