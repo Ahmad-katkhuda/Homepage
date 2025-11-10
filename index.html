@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Microsoft-Certified Dynamics 365 SCM Technical Consultant (X++, C#). Specializing in performance optimization, architecture, and agile DevOps for manufacturing and distribution enterprises.">
-    <title>Ahmad Katkhuda | D365 SCM Technical Consultant</title>
+    <title>Ahmad Katkhuda | D365 SCM Technical Consultant (Wartungsmodus)</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- REMOVED: Google Fonts links for DSGVO compliance. Using system font stack now. -->
     
     <!-- Deferred Lucide Icon script -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -34,6 +33,23 @@
             font-family: sans-serif; 
             background-color: var(--color-light); 
             scroll-behavior: smooth; /* Ensure smooth scrolling on all anchor clicks */
+        }
+
+        /* WARTUNGSMODUS: Stellt sicher, dass die gesamte Seite abgedeckt wird */
+        #maintenance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f7f7f7; /* Helle Hintergrundfarbe */
+            z-index: 100; /* Muss über allen anderen Elementen liegen */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+            padding: 2rem;
         }
         
         /* NEW SCROLL FIX: Apply padding to sections instead of body */
@@ -175,6 +191,27 @@
     <!-- REMOVED: Arabic Font Import for DSGVO compliance -->
 </head>
 <body class="text-gray-900">
+    
+    <!-- *** WARTUNGSMODUS OVERLAY - AKTIVIERT *** -->
+    <div id="maintenance-overlay">
+        <div class="max-w-xl p-8 bg-white rounded-xl shadow-2xl">
+            <i data-lucide="wrench" class="text-red-500 w-16 h-16 mx-auto mb-6"></i>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Website wegen Wartungsarbeiten geschlossen</h1>
+            <p class="text-lg text-gray-700 mb-6">
+                Wir arbeiten derzeit daran, unsere Website zu aktualisieren, um die **vollständige Einhaltung aller Datenschutzbestimmungen (DSGVO)** sicherzustellen.
+            </p>
+            <p class="text-md text-gray-500">
+                Vielen Dank für Ihr Verständnis. Wir sind bald wieder für Sie da!
+            </p>
+            <!-- WICHTIG: Ersetzen Sie [Ihre Kontakt-E-Mail-Adresse] durch Ihre tatsächliche Adresse -->
+            <p class="mt-8 text-sm text-gray-600">
+                Bei dringenden Anfragen erreichen Sie Ahmad Katkhuda unter:
+                <a href="mailto:ihre.email@beispiel.de" class="text-blue-600 hover:text-blue-800 font-semibold">ihre.email@beispiel.de</a>
+            </p>
+        </div>
+    </div>
+    <!-- *** ENDE WARTUNGSMODUS OVERLAY *** -->
+
     
     <!-- Language Management Script -->
     <script>
@@ -798,151 +835,6 @@
                             احجز استشارة مجانية
                         </a>
                         <p class="text-sm mt-3 text-gray-500">احصل على خريطة طريق فنية مصممة خصيصًا لبيئة D365 لديك.</p>
-                    </section>
-
-                    <hr class="border-t border-gray-200 my-16">
-                    
-                    <!-- D365 SCM Modules (Processes) -->
-                    <section id="modules-ar" class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
-                        <h2 class="text-4xl font-semibold text-center mb-12">
-                            الوحدات الأساسية لخبرة D365 SCM: وحدات العمل
-                        </h2>
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <!-- Modules content here (kept intact) -->
-                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
-                                <i data-lucide="package" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
-                                <div>
-                                    <h3 class="text-xl font-semibold">إدارة المخزون والمستودعات (WMS)</h3>
-                                    <p class="text-gray-600 mt-1 text-sm">تخصيص وتحسين منطق عمليات المستودعات المتقدمة وتكامل الأجهزة المحمولة ودقة المخزون.</p>
-                                </div>
-                            </div>
-                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
-                                <i data-lucide="factory" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
-                                <div>
-                                    <h3 class="text-xl font-semibold">التحكم في الإنتاج</h3>
-                                    <p class="text-gray-600 mt-1 text-sm">هندسة حلول مخصصة للتصنيع المنفصل (discrete) والخفيف (lean)، بما في ذلك قوائم المواد والطرق وتنفيذ أرضية المتجر.</p>
-                                </div>
-                            </div>
-                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
-                                <i data-lucide="truck" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
-                                <div>
-                                    <h3 class="text-xl font-semibold">إدارة النقل (TMS)</h3>
-                                    <p class="text-gray-600 mt-1 text-sm">التكامل والتطوير للشحن، مقارنة الأسعار، التوجيه، وتحسين تخطيط الحمولة.</p>
-                                </div>
-                            </div>
-                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
-                                <i data-lucide="shopping-cart" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
-                                <div>
-                                    <h3 class="text-xl font-semibold">المشتريات والمصادر</h3>
-                                    <p class="text-gray-600 mt-1 text-sm">توسيع المنطق الأساسي للطلبات وأوامر الشراء وتقييم الموردين والمطابقة الثلاثية.</p>
-                                </div>
-                            </div>
-                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
-                                <i data-lucide="dollar-sign" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
-                                <div>
-                                    <h3 class="text-xl font-semibold">المبيعات والتسويق</h3>
-                                    <p class="text-gray-600 mt-1 text-sm">التخصيص الفني لأوامر المبيعات ومحركات التسعير والعمولات والتكامل مع Power Platform.</p>
-                                </div>
-                            </div>
-                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
-                                <i data-lucide="trending-up" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
-                                <div>
-                                    <h3 class="text-xl font-semibold">التخطيط الرئيسي (MRP)</h3>
-                                    <p class="text-gray-600 mt-1 text-sm">ضبط الأداء وتخصيص منطق التخطيط لضمان المتطلبات الصحيحة للمواد والقدرة الإنتاجية.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <!-- Service Pillars -->
-                    <section id="services-ar" class="py-20">
-                        <h2 class="text-4xl font-semibold text-center mb-6">
-                            ركائز الخدمات الفنية
-                        </h2>
-                        <p class="text-center text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-                            نهج شامل لنجاح D365، يضمن أن تكون الحلول قوية وسريعة وقابلة للتطوير.
-                        </p>
-                        <div class="grid md:grid-cols-3 gap-8">
-                            <!-- Services content here (kept intact) -->
-                            <div class="modern-card p-8 rounded-2xl">
-                                <i data-lucide="zap" class="dynamic-accent w-8 h-8 mb-4"></i>
-                                <h3 class="text-2xl font-semibold mb-2">الأداء والهندسة المعمارية</h3>
-                                <p class="text-gray-600">عمليات تدقيق الأداء المتعمقة، تحسين استعلامات SQL، إصلاحات تجميع CIL، والتصميم الفني لعمليات النشر الكبيرة للمؤسسات.</p>
-                            </div>
-                            <div class="modern-card p-8 rounded-2xl">
-                                <i data-lucide="code" class="dynamic-accent w-8 h-8 mb-4"></i>
-                                <h3 class="text-2xl font-semibold mb-2">التطوير والتكامل (X++ / C#)</h3>
-                                <p class="text-gray-600">تطوير شامل للتخصيصات، تكامل حلول ISV، كيانات البيانات لواجهات برمجة التطبيقات الخارجية (APIs)، وإدارة خدمات دورة الحياة (LCS).</p>
-                            </div>
-                            <div class="modern-card p-8 rounded-2xl">
-                                <i data-lucide="git-branch" class="dynamic-accent w-8 h-8 mb-4"></i>
-                                <h3 class="text-2xl font-semibold mb-2">Azure DevOps ودورة الحياة</h3>
-                                <p class="text-gray-600">إعداد خطوط أنابيب البناء والإصدار الآلية (CI/CD)، استراتيجيات التحكم في الإصدار، إدارة البيئة، والالتزام بأفضل الممارسات.</p>
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <!-- Technical Toolkit (Icon Grid) -->
-                    <section id="toolkit-ar" class="py-16 bg-white">
-                        <h2 class="text-4xl font-semibold text-center mb-6">
-                            مجموعة الأدوات الفنية
-                        </h2>
-                        <p class="text-center text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-                            التقنيات والأدوات الأساسية التي أعتمد عليها لتقديم تطوير ونشر قوي.
-                        </p>
-                        <div class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-                            <!-- Toolkit content here (kept intact) -->
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="code" class="w-4 h-4 ml-2 dynamic-accent"></i>X++ & C#</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="database" class="w-4 h-4 ml-2 dynamic-accent"></i>MS SQL / SSMS</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="cloud" class="w-4 h-4 ml-2 dynamic-accent"></i>Azure DevOps (ADO)</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="columns-3" class="w-4 h-4 ml-2 dynamic-accent"></i>Dynamics AX 2012 / 2009</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="puzzle" class="w-4 h-4 ml-2 dynamic-accent"></i>تكامل Power Platform</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="list-checks" class="w-4 h-4 ml-2 dynamic-accent"></i>هندسة المتطلبات</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="maximize-2" class="w-4 h-4 ml-2 dynamic-accent"></i>ضبط الأداء</span>
-                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="server" class="w-4 h-4 ml-2 dynamic-accent"></i>LCS / إدارة البيئة</span>
-                        </div>
-                    </section>
-
-                    <!-- About Section -->
-                    <section id="about-ar" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
-                        <div class="grid lg:grid-cols-3 gap-12 items-center">
-                            <!-- Image Column (Order reversed for RTL) -->
-                            <div class="lg:col-span-1 lg:order-last flex justify-center">
-                                <img src="IMG_2853.jpg" onerror="this.src='https://placehold.co/250x300/F5F5F7/999?text=Ahmad+Katkhuda'" alt="صورة لأحمد كتخدا، مستشار فني Dynamics 365." class="w-64 h-80 object-cover rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03]">
-                            </div>
-
-                            <!-- Text Column -->
-                            <div class="lg:col-span-2 lg:order-first">
-                                <h2 class="text-4xl font-semibold mb-6">
-                                    عن أحمد كتخدا
-                                </h2>
-                                <p class="text-lg font-light text-gray-700 mb-4">
-                                    أنا مستشار فني كبير ملتزم ولدي أكثر من ثماني سنوات من الخبرة العميقة في نظام Microsoft Dynamics ERP، متخصص في الهندسة المعمارية والتطوير الفني لـ Dynamics 365 Finance & Supply Chain Management.
-                                </p>
-                                <p class="text-lg font-light text-gray-700 mb-4">
-                                    تكمن قوتي الفريدة في دعم وتصميم العمليات الشاملة (خاصة في الإنتاج والمشتريات والمبيعات) من خلال الجمع بين المعرفة التقنية العميقة في X++ و SQL والفهم الحاد لتحسين العمليات التجارية. أركز على تقديم حلول قوية وعالية الأداء وسليمة من الناحية المعمارية.
-                                </p>
-                                
-                                <div class="mt-6 flex flex-wrap gap-4 justify-end">
-                                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white rounded-full border border-gray-300 shadow-sm"><i data-lucide="award" class="w-4 h-4 ml-2 dynamic-accent"></i>أكثر من 8 سنوات خبرة</span>
-                                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white rounded-full border border-gray-300 shadow-sm"><i data-lucide="graduation-cap" class="w-4 h-4 ml-2 dynamic-accent"></i>بكالوريوس هندسة الحاسوب</span>
-                                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white rounded-full border border-gray-300 shadow-sm"><i data-lucide="map-pin" class="w-4 h-4 ml-2 dynamic-accent"></i>المقر في هامبورغ، ألمانيا</span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Contact/CTA Section (Final CTA) -->
-                    <section id="contact-ar" class="text-center py-20">
-                        <h2 class="text-4xl font-semibold mb-6">
-                            هل أنت مستعد لتحسين سلسلة الإمداد لديك؟
-                        </h2>
-                        <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
-                            دعنا نناقش نقاط الضعف الحالية في D365، أو عنق الزجاجة في الأداء، أو متطلبات مشروعك القادمة. مراجعتك الفنية الأولى مجانية.
-                        </p>
-                        <a href="https://calendly.com/ahmad-katkhuda" target="_blank" class="cta-button inline-flex items-center px-10 py-4 text-xl font-bold text-white rounded-full shadow-2xl transition duration-300 transform hover:scale-[1.05]">
-                            احجز استشارتك المجانية
-                        </a>
                     </section>
 
                     <!-- DSGVO: Impressum Section Placeholder (AR) -->
