@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 5. SEO & Readability: Added Meta Description -->
     <meta name="description" content="Microsoft-Certified Dynamics 365 SCM Technical Consultant (X++, C#). Specializing in performance optimization, architecture, and agile DevOps for manufacturing and distribution enterprises.">
-    <title>Ahmad Katkhuda | D365 SCM Technical Consultant (Wartungsmodus)</title>
+    <title>Ahmad Katkhuda | D365 SCM Technical Consultant</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Deferred Lucide Icon script -->
+    <!-- 2. Typography: Imported Google Font (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- 4. Performance & Accessibility: Deferred Lucide Icon script -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <style>
         /* Custom styles for an Apple-inspired, premium, and clean look */
@@ -29,40 +31,17 @@
             --color-mosaic-purple: #a66de6;
         }
         body {
-            /* Changed to system sans-serif stack for DSGVO compliance */
-            font-family: sans-serif; 
+            font-family: 'Inter', sans-serif;
             background-color: var(--color-light); 
             scroll-behavior: smooth; /* Ensure smooth scrolling on all anchor clicks */
         }
-
-        /* WARTUNGSMODUS: Stellt sicher, dass die gesamte Seite abgedeckt wird */
-        #maintenance-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f7f7f7; /* Helle Hintergrundfarbe */
-            z-index: 100; /* Muss über allen anderen Elementen liegen */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            flex-direction: column;
-            padding: 2rem;
-        }
         
-        /* NEW SCROLL FIX: Apply padding to sections instead of body */
-        section[id] {
-            padding-top: 1.5rem; /* Default padding for mobile (adjusts based on header size) */
-            margin-top: -1.5rem; /* Pulls section back up to maintain overall layout flow */
-        }
-        /* Desktop adjustment for perfect alignment */
-        @media (min-width: 1024px) {
-            section[id] {
-                padding-top: 3.5rem; /* Safe padding to fully clear the fixed header on desktop */
-                margin-top: -3.5rem;
-            }
+        /* IMPROVED SCROLL FIX: Better approach for section offsets */
+        .section-anchor {
+            display: block;
+            position: relative;
+            top: -80px;
+            visibility: hidden;
         }
         
         .header-bg {
@@ -82,14 +61,12 @@
         /* RTL support for Arabic section */
         .rtl {
             direction: rtl;
-            text-align: right;
         }
-        .rtl * {
-            text-align: right; 
+        .rtl .text-align-reset {
+            text-align: left;
         }
         .rtl .module-card-ar {
             justify-content: flex-end;
-            text-align: right;
         }
         /* Large, centered hero text style */
         .hero-title {
@@ -117,8 +94,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
         }
-        
-        /* FIX 2: Mobile menu transition using max-height */
+        /* Mobile menu transition */
         #menu-toggle:checked ~ #mobile-menu {
             max-height: 500px;
             padding-top: 1rem;
@@ -129,7 +105,6 @@
             overflow: hidden;
             transition: max-height 0.4s ease-out; 
         }
-        
         /* Scroll to Top Button style */
         #scroll-to-top {
             position: fixed;
@@ -144,28 +119,31 @@
             transition: opacity 0.3s, transform 0.3s;
             z-index: 10;
         }
-        
-        /* Arabic font override - using system sans-serif now */
+        /* Arabic font override for better consistency */
         #content-ar {
-            font-family: sans-serif; 
+            font-family: 'Cairo', 'Inter', sans-serif;
         }
 
-        /* Damascus Mosaic Logo Styling from user input */
+        /* NEW: Damascus Mosaic Logo Styling from user input */
         .piece{
             transition:transform .35s cubic-bezier(.2,.9,.25,1),filter .35s;
             transform-origin:center
         }
         .piece:hover{
-            transform:translateY(-2px) scale(1.05);
+            transform:translateY(-2px) scale(1.05); /* Adjusted scale for smaller header icon */
             filter:brightness(1.08);
         }
         .seam{
-            stroke:var(--color-dark);
+            stroke:var(--color-dark); /* Using main dark color for seams */
             stroke-width:1
         }
 
-        /* Language Dropdown - Use larger target area for hover effect */
-        .group:hover .dropdown-content {
+        /* IMPROVED: Language Dropdown - Better accessibility and hover */
+        .language-dropdown {
+            position: relative;
+        }
+        .language-dropdown:hover .dropdown-content,
+        .language-dropdown:focus-within .dropdown-content {
             opacity: 1;
             pointer-events: auto;
             margin-top: 0;
@@ -176,8 +154,12 @@
             transition: opacity 0.2s, margin-top 0.2s; 
         }
 
-        /* Footer Language Dropdown - Use larger target area for hover effect */
-        .group:hover .footer-dropdown-content {
+        /* IMPROVED: Footer Language Dropdown */
+        .footer-language-dropdown {
+            position: relative;
+        }
+        .footer-language-dropdown:hover .footer-dropdown-content,
+        .footer-language-dropdown:focus-within .footer-dropdown-content {
              opacity: 1;
              pointer-events: auto;
              margin-bottom: 0; 
@@ -187,128 +169,439 @@
             pointer-events: none;
             transition: opacity 0.2s, margin-bottom 0.2s;
         }
+        
+        /* NEW: Cookie Banner Styles (Fixed position, full screen overlay) */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50; /* Above all content and sticky header (z-20) */
+            max-width: 100%;
+            padding: 1.5rem;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            background-color: var(--color-dark);
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.4s ease-out;
+        }
+        .cookie-banner.show {
+            transform: translateY(0);
+        }
+
+        /* Styling for the modal/pop-up version */
+        .cookie-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 60;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .cookie-modal {
+            background-color: white;
+            color: var(--color-dark);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            max-width: 90%;
+            width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+        }
+        .cookie-modal-overlay.show .cookie-modal {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .cookie-modal-overlay.show {
+            display: flex;
+        }
+
+        /* Style the 'Accept All' button as primary/intuitive */
+        .btn-accept-all {
+            background-color: var(--color-accent); /* Dynamic Accent for primary action */
+            border-color: var(--color-accent);
+            color: white;
+            transition: background-color 0.2s;
+        }
+        .btn-accept-all:hover {
+            background-color: #008466; /* Slightly darker green */
+        }
+        /* Style the 'Mandatory only' button as secondary */
+        .btn-mandatory {
+            background-color: transparent;
+            border-color: var(--color-dark);
+            color: var(--color-dark);
+            transition: background-color 0.2s;
+        }
+        .btn-mandatory:hover {
+            background-color: var(--color-medium);
+        }
+
     </style>
-    <!-- REMOVED: Arabic Font Import for DSGVO compliance -->
+    <!-- Arabic Font Import -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="text-gray-900">
     
-    <!-- *** WARTUNGSMODUS OVERLAY - AKTIVIERT *** -->
-    <div id="maintenance-overlay">
-        <div class="max-w-xl p-8 bg-white rounded-xl shadow-2xl">
-            <i data-lucide="wrench" class="text-red-500 w-16 h-16 mx-auto mb-6"></i>
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Website wegen Wartungsarbeiten geschlossen</h1>
-            <p class="text-lg text-gray-700 mb-6">
-                Wir arbeiten derzeit daran, unsere Website zu aktualisieren, um die **vollständige Einhaltung aller Datenschutzbestimmungen (DSGVO)** sicherzustellen.
-            </p>
-            <p class="text-md text-gray-500">
-                Vielen Dank für Ihr Verständnis. Wir sind bald wieder für Sie da!
-            </p>
-            <!-- WICHTIG: Ersetzen Sie [Ihre Kontakt-E-Mail-Adresse] durch Ihre tatsächliche Adresse -->
-            <p class="mt-8 text-sm text-gray-600">
-                Bei dringenden Anfragen erreichen Sie Ahmad Katkhuda unter:
-                <a href="mailto:ihre.email@beispiel.de" class="text-blue-600 hover:text-blue-800 font-semibold">ihre.email@beispiel.de</a>
-            </p>
-        </div>
-    </div>
-    <!-- *** ENDE WARTUNGSMODUS OVERLAY *** -->
-
-    
     <!-- Language Management Script -->
     <script>
-        // Default language
+        // --- DSGVO COOKIE CONSENT LOGIC ---
+        const COOKIE_CONSENT_KEY = 'dsgvo_cookie_consent';
+        const COOKIE_EXPIRY_DAYS = 365;
+
+        // Default language - match initial visible content
         let currentLang = 'en';
+        
+        // Functions for multi-language display
+        const translations = {
+            en: {
+                title: 'Cookie Consent',
+                text: 'We use non-mandatory cookies to analyze traffic and improve user experience. You can choose to accept all, or only mandatory cookies.',
+                acceptAll: 'Accept All & Continue',
+                mandatoryOnly: 'Accept Mandatory Only',
+                imprint: 'Imprint',
+                privacy: 'Privacy Policy',
+                navModules: 'Modules',
+                navServices: 'Services',
+                navToolkit: 'Toolkit',
+                navAbout: 'About',
+                navContact: 'Contact'
+            },
+            de: {
+                title: 'Cookie-Zustimmung',
+                text: 'Wir verwenden nicht zwingend notwendige Cookies, um den Traffic zu analysieren und die Benutzererfahrung zu verbessern. Sie können alle Cookies oder nur die notwendigen Cookies akzeptieren.',
+                acceptAll: 'Alle Akzeptieren & Fortfahren',
+                mandatoryOnly: 'Nur Notwendige Akzeptieren',
+                imprint: 'Impressum',
+                privacy: 'Datenschutzerklärung',
+                navModules: 'Module',
+                navServices: 'Services',
+                navToolkit: 'Toolkit',
+                navAbout: 'Über mich',
+                navContact: 'Kontakt'
+            },
+            ar: {
+                title: 'الموافقة على ملفات تعريف الارتباط',
+                text: 'نستخدم ملفات تعريف الارتباط غير الإلزامية لتحليل حركة المرور وتحسين تجربة المستخدم. يمكنك اختيار قبول الجميع، أو ملفات تعريف الارتباط الإلزامية فقط.',
+                acceptAll: 'قبول الكل والمتابعة',
+                mandatoryOnly: 'قبول الإلزامي فقط',
+                imprint: 'بيانات الشركة',
+                privacy: 'سياسة الخصوصية',
+                navModules: 'الوحدات',
+                navServices: 'الخدمات',
+                navToolkit: 'الأدوات',
+                navAbout: 'عني',
+                navContact: 'اتصل'
+            }
+        };
 
-        // Function to switch content blocks
-        function switchLanguage(lang) {
-            const contentEn = document.getElementById('content-en');
-            const contentDe = document.getElementById('content-de');
-            const contentAr = document.getElementById('content-ar');
-            
-            // Safety check: Only try to hide if the element exists
-            if (contentEn) contentEn.classList.add('hidden');
-            if (contentDe) contentDe.classList.add('hidden');
-            if (contentAr) contentAr.classList.add('hidden');
-
-            // Show selected content block
-            const selectedContent = document.getElementById(`content-${lang}`);
-            if (selectedContent) {
-                selectedContent.classList.remove('hidden');
+        function setCookie(name, value, days) {
+            try {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/; secure; samesite=Lax";
+                return true;
+            } catch (error) {
+                console.error('Error setting cookie:', error);
+                return false;
             }
-
-            // Set body direction and alignment based on language
-            const body = document.body;
-            if (lang === 'ar') {
-                body.classList.add('rtl');
-                body.classList.remove('ltr');
-            } else {
-                body.classList.remove('rtl');
-                body.classList.add('ltr');
-            }
-            currentLang = lang;
-            
-            // Close mobile menu if open
-            const menuToggle = document.getElementById('menu-toggle');
-            if (menuToggle && menuToggle.checked) {
-                menuToggle.checked = false;
-            }
-            
-            // Update the display for the desktop language switcher
-            const currentLangDisplay = document.getElementById('current-lang-display');
-            if (currentLangDisplay) {
-                currentLangDisplay.textContent = lang.toUpperCase();
-            }
-            
-            // Update mobile menu links to point to the new section IDs
-            updateMobileNavLinks(lang);
         }
 
-        function updateMobileNavLinks(lang) {
-            const links = document.querySelectorAll('#mobile-menu a[data-section]');
-            links.forEach(link => {
-                const section = link.getAttribute('data-section');
-                link.href = `#${section}-${lang}`;
-            });
+        function getCookie(name) {
+            try {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            } catch (error) {
+                console.error('Error reading cookie:', error);
+                return null;
+            }
+        }
+        
+        function updateNavigationText(lang) {
+            try {
+                const t = translations[lang];
+                // Update desktop navigation
+                const navLinks = document.querySelectorAll('nav a[data-nav-key]');
+                navLinks.forEach(link => {
+                    const key = link.getAttribute('data-nav-key');
+                    if (t[key]) {
+                        link.textContent = t[key];
+                    }
+                });
+                
+                // Update mobile navigation
+                const mobileNavLinks = document.querySelectorAll('#mobile-menu a[data-nav-key]');
+                mobileNavLinks.forEach(link => {
+                    const key = link.getAttribute('data-nav-key');
+                    if (t[key]) {
+                        link.textContent = t[key];
+                    }
+                });
+            } catch (error) {
+                console.error('Error updating navigation text:', error);
+            }
+        }
+        
+        function updateModalText(lang) {
+            try {
+                const t = translations[lang];
+                document.getElementById('cookie-title').textContent = t.title;
+                document.getElementById('cookie-text').textContent = t.text;
+                document.getElementById('btn-accept-all').textContent = t.acceptAll;
+                document.getElementById('btn-mandatory-only').textContent = t.mandatoryOnly;
+                
+                // Update Footer Links
+                document.getElementById('footer-imprint-link').textContent = t.imprint;
+                document.getElementById('footer-privacy-link').textContent = t.privacy;
+                
+                // Update navigation text
+                updateNavigationText(lang);
+            } catch (error) {
+                console.error('Error updating modal text:', error);
+            }
+        }
+
+        // 4. Language Versions: Function to switch content blocks
+        function switchLanguage(lang) {
+            try {
+                // Validate language
+                if (!['en', 'de', 'ar'].includes(lang)) {
+                    console.warn('Invalid language:', lang);
+                    lang = 'en';
+                }
+
+                // Hide all content blocks
+                const contentBlocks = ['en', 'de', 'ar'];
+                contentBlocks.forEach(l => {
+                    const element = document.getElementById(`content-${l}`);
+                    if (element) {
+                        element.classList.add('hidden');
+                    } else {
+                        console.warn('Content block not found:', `content-${l}`);
+                    }
+                });
+
+                // Show selected content block
+                const selectedContent = document.getElementById(`content-${lang}`);
+                if (selectedContent) {
+                    selectedContent.classList.remove('hidden');
+                } else {
+                    console.error('Selected content block not found:', `content-${lang}`);
+                    // Fallback to English
+                    const fallbackContent = document.getElementById('content-en');
+                    if (fallbackContent) {
+                        fallbackContent.classList.remove('hidden');
+                        lang = 'en';
+                    }
+                }
+
+                // Update HTML lang attribute
+                document.documentElement.lang = lang;
+
+                // Set body direction and alignment based on language
+                const body = document.body;
+                if (lang === 'ar') {
+                    body.classList.add('rtl');
+                    body.classList.remove('ltr');
+                } else {
+                    body.classList.remove('rtl');
+                    body.classList.add('ltr');
+                }
+                currentLang = lang;
+                
+                // Update all legal/static text elements
+                updateModalText(lang);
+                
+                // Update navigation links to point to current language sections
+                updateNavigationLinks(lang);
+                
+                // Close mobile menu if open
+                const menuToggle = document.getElementById('menu-toggle');
+                if (menuToggle && menuToggle.checked) {
+                    menuToggle.checked = false;
+                }
+                
+                // Update the display for the desktop language switcher
+                const currentLangDisplay = document.getElementById('current-lang-display');
+                if (currentLangDisplay) {
+                    currentLangDisplay.textContent = lang.toUpperCase();
+                }
+                
+                // Update the URL hash without scrolling
+                history.replaceState(undefined, undefined, `#${lang}`);
+                
+                // Initialize Lucide icons after content change
+                initializeIcons();
+                
+            } catch (error) {
+                console.error('Error switching language:', error);
+            }
+        }
+
+        function updateNavigationLinks(lang) {
+            try {
+                // Update all navigation links to point to current language sections
+                const navLinks = document.querySelectorAll('a[data-section]');
+                navLinks.forEach(link => {
+                    const section = link.getAttribute('data-section');
+                    link.href = `#${section}-${lang}`;
+                });
+                
+                // Update logo link
+                const logoLink = document.querySelector('a[data-logo-link]');
+                if (logoLink) {
+                    logoLink.href = `#hero-${lang}`;
+                }
+            } catch (error) {
+                console.error('Error updating navigation links:', error);
+            }
+        }
+
+        function initializeIcons() {
+            // Initialize Lucide icons with error handling
+            if (typeof lucide !== 'undefined') {
+                try {
+                    lucide.createIcons();
+                } catch (iconError) {
+                    console.warn('Error initializing Lucide icons:', iconError);
+                    // Retry after a short delay
+                    setTimeout(() => {
+                        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                            lucide.createIcons();
+                        }
+                    }, 100);
+                }
+            } else {
+                // Lucide not loaded yet, wait and retry
+                setTimeout(initializeIcons, 50);
+            }
+        }
+
+        function handleConsent(status) {
+            try {
+                // Status can be 'accepted' or 'mandatory'
+                if (setCookie(COOKIE_CONSENT_KEY, status, COOKIE_EXPIRY_DAYS)) {
+                    document.getElementById('cookie-modal-overlay').classList.remove('show');
+                    
+                    if (status === 'accepted') {
+                        loadNonMandatoryScripts();
+                    }
+                } else {
+                    console.error('Failed to set cookie consent');
+                }
+            } catch (error) {
+                console.error('Error handling consent:', error);
+            }
+        }
+        
+        // Placeholder for non-mandatory scripts (like analytics)
+        function loadNonMandatoryScripts() {
+            try {
+                console.log("Non-mandatory cookies/scripts (e.g., Google Analytics) loaded.");
+                // In a real application, you would dynamically load your analytics scripts here
+                // e.g. inject <script src="analytics.js"></script>
+            } catch (error) {
+                console.error('Error loading non-mandatory scripts:', error);
+            }
+        }
+
+        function checkConsent() {
+            try {
+                const consent = getCookie(COOKIE_CONSENT_KEY);
+                if (!consent) {
+                    // Show the modal/pop-up
+                    document.getElementById('cookie-modal-overlay').classList.add('show');
+                } else if (consent === 'accepted') {
+                    // Load non-mandatory scripts if already accepted
+                    loadNonMandatoryScripts();
+                } else {
+                    // Only mandatory scripts are running (the core HTML/CSS/JS)
+                    console.log("Consent found: Mandatory only. Non-mandatory scripts blocked.");
+                }
+            } catch (error) {
+                console.error('Error checking consent:', error);
+            }
         }
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
-            // Check URL hash for language preference, otherwise default to 'en'
-            const hash = window.location.hash.substring(1);
-            if (['en', 'de', 'ar'].includes(hash)) {
-                switchLanguage(hash);
-            } else {
-                switchLanguage(currentLang);
-            }
-            
-            // Scroll to Top Logic
-            const scrollToTopBtn = document.getElementById('scroll-to-top');
-            window.onscroll = function() {
-                if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                    scrollToTopBtn.style.opacity = "1";
-                    scrollToTopBtn.style.transform = "translateY(0)";
+            try {
+                // Set initial cookie modal text to English (matching initial content)
+                updateModalText('en');
+                
+                // Check URL hash for language preference, otherwise default to 'en'
+                const hash = window.location.hash.substring(1);
+                if (['en', 'de', 'ar'].includes(hash)) {
+                    switchLanguage(hash);
                 } else {
-                    scrollToTopBtn.style.opacity = "0";
-                    scrollToTopBtn.style.transform = "translateY(10px)";
+                    // Default to English to match initial visible content
+                    switchLanguage('en'); 
                 }
-            };
-            scrollToTopBtn.onclick = function() {
-                // Use built-in scroll behavior
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
+                
+                // Run cookie check after language is set
+                checkConsent();
 
-            // Run Lucide icon replacement after load
-            lucide.createIcons();
+                // Scroll to Top Logic
+                const scrollToTopBtn = document.getElementById('scroll-to-top');
+                if (scrollToTopBtn) {
+                    window.onscroll = function() {
+                        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                            scrollToTopBtn.style.opacity = "1";
+                            scrollToTopBtn.style.transform = "translateY(0)";
+                        } else {
+                            scrollToTopBtn.style.opacity = "0";
+                            scrollToTopBtn.style.transform = "translateY(10px)";
+                        }
+                    };
+                    scrollToTopBtn.onclick = function() {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    };
+                }
+                
+                // Initialize icons after everything is loaded
+                setTimeout(initializeIcons, 100);
+                
+            } catch (error) {
+                console.error('Error during initialization:', error);
+            }
+        });
+
+        // Keyboard navigation for dropdowns
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close dropdowns on escape
+                document.querySelectorAll('.dropdown-content, .footer-dropdown-content').forEach(dropdown => {
+                    dropdown.style.opacity = '0';
+                    dropdown.style.pointerEvents = 'none';
+                });
+            }
         });
     </script>
 
-    <!-- Header & Navigation (Fixed at top, Z-index 20) -->
+    <!-- Header & Navigation -->
     <header class="header-bg text-white shadow-lg sticky top-0 z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             
             <div class="flex justify-between items-center h-16">
                 <!-- Logo & Brand -->
-                <a href="#hero-en" class="flex-shrink-0 flex items-center space-x-3"> 
-                    <!-- Damascus Mosaic Microsoft Logo (UNTOUCHED SVG) -->
+                <a href="#hero-en" data-logo-link="true" class="flex-shrink-0 flex items-center space-x-3"> 
+                    <!-- Damascus Mosaic Logo (Integrated SVG) -->
                     <svg class="h-8 w-8" viewBox="0 0 440 440" role="img" aria-labelledby="logoTitle logoDesc">
                         <title id="logoTitle">Damascus Mosaic Four-Square Logo</title>
                         <desc id="logoDesc">Four rounded squares arranged 2 by 2. Each square is filled with small geometric shards creating a Damascus mosaic look.</desc>
@@ -366,39 +659,36 @@
                             </g>
                         </g>
                     </svg>
-                    <!-- END LOGO -->
+                    <!-- END NEW LOGO -->
                     <span class="font-semibold text-lg tracking-wide hidden sm:inline-block">Ahmad Katkhuda</span>
                     <span class="text-xs font-light tracking-wider text-gray-400 hidden lg:inline-block">| D365 SCM Technical Consultant</span>
                 </a>
                 
-                <!-- Desktop Navigation Links (Visible on md and larger screens) -->
-                <nav class="hidden md:flex lg:space-x-4 space-x-2">
-                    <a href="#modules-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Modules</a>
-                    <a href="#services-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Services</a>
-                    <a href="#toolkit-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Toolkit</a>
-                    <a href="#about-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">About</a>
-                    <a href="#contact-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Contact</a>
-                    <!-- DSGVO: Added Impressum and Datenschutz to desktop navigation -->
-                    <a href="#impressum-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150 text-sm">Impressum</a>
-                    <a href="#datenschutz-en" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150 text-sm">Datenschutz</a>
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex lg:space-x-8">
+                    <a href="#modules-en" data-section="modules" data-nav-key="navModules" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Modules</a>
+                    <a href="#services-en" data-section="services" data-nav-key="navServices" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Services</a>
+                    <a href="#toolkit-en" data-section="toolkit" data-nav-key="navToolkit" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Toolkit</a>
+                    <a href="#about-en" data-section="about" data-nav-key="navAbout" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">About</a>
+                    <a href="#contact-en" data-section="contact" data-nav-key="navContact" class="text-white hover:dynamic-accent px-3 py-2 rounded-md font-medium transition duration-150">Contact</a>
                 </nav>
 
-                <!-- Desktop Language Switcher (Visible on md and larger screens) -->
-                <div class="hidden md:flex items-center space-x-2 relative group">
-                    <button class="flex items-center text-white hover:dynamic-accent p-2 rounded-md transition duration-150" aria-label="Select Language">
+                <!-- 3. Navigation: Desktop Language Switcher (Improved) -->
+                <div class="hidden lg:flex items-center space-x-2 language-dropdown">
+                    <button class="flex items-center text-white hover:dynamic-accent p-2 rounded-md transition duration-150 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50" aria-label="Select Language" aria-expanded="false">
                         <i data-lucide="globe" class="w-5 h-5"></i>
                         <span class="ml-1 text-sm font-medium uppercase" id="current-lang-display">EN</span>
                     </button>
                     <!-- Dropdown Content -->
-                    <div class="absolute right-0 top-full mt-0 w-32 bg-white rounded-lg shadow-xl dropdown-content origin-top">
-                        <a href="#en" onclick="switchLanguage('en');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">English</a>
-                        <a href="#de" onclick="switchLanguage('de');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">Deutsch</a>
-                        <a href="#ar" onclick="switchLanguage('ar');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">العربية</a>
+                    <div class="absolute right-0 top-full mt-0 w-32 bg-white rounded-lg shadow-xl dropdown-content origin-top" role="menu">
+                        <a href="#en" onclick="switchLanguage('en'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
+                        <a href="#de" onclick="switchLanguage('de'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
+                        <a href="#ar" onclick="switchLanguage('ar'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
                     </div>
                 </div>
 
-                <!-- Mobile Menu Button (Hamburger - Visible on small screens) -->
-                <div class="md:hidden flex items-center">
+                <!-- 3. Navigation: Mobile Menu Button (Hamburger) -->
+                <div class="lg:hidden flex items-center">
                     <input type="checkbox" id="menu-toggle" class="hidden">
                     <label for="menu-toggle" class="cursor-pointer p-2 rounded-md hover:bg-gray-700 transition duration-150" aria-label="Toggle navigation menu">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -409,16 +699,12 @@
             </div>
             
             <!-- Mobile Menu Dropdown -->
-            <nav id="mobile-menu" class="md:hidden text-base">
-                <!-- Data-section attributes are used by updateMobileNavLinks to ensure correct language linking -->
-                <a href="#modules-en" data-section="modules" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
-                <a href="#services-en" data-section="services" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
-                <a href="#toolkit-en" data-section="toolkit" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
-                <a href="#about-en" data-section="about" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
-                <a href="#contact-en" data-section="contact" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
-                <!-- DSGVO: Added Impressum and Datenschutz to mobile navigation -->
-                <a href="#impressum-en" data-section="impressum" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Impressum</a>
-                <a href="#datenschutz-en" data-section="datenschutz" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Datenschutz</a>
+            <nav id="mobile-menu" class="lg:hidden text-base">
+                <a href="#modules-en" data-section="modules" data-nav-key="navModules" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
+                <a href="#services-en" data-section="services" data-nav-key="navServices" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
+                <a href="#toolkit-en" data-section="toolkit" data-nav-key="navToolkit" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
+                <a href="#about-en" data-section="about" data-nav-key="navAbout" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
+                <a href="#contact-en" data-section="contact" data-nav-key="navContact" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
             
                 <!-- Mobile Language Switcher -->
                 <div class="mt-4 pt-4 border-t border-gray-700">
@@ -435,11 +721,12 @@
         <!-- Multilingual Content Containers -->
         <div class="relative">
             
-            <!-- ENGLISH CONTENT (Default) -->
+            <!-- ENGLISH CONTENT (Default visible) -->
             <div id="content-en" class="relative z-10">
-                <div>
+                <div class="lg:ml-0"> 
                     <!-- Hero Section -->
-                    <section id="hero-en" class="text-center py-20 sm:py-32">
+                    <span class="section-anchor" id="hero-en"></span>
+                    <section class="text-center py-20 sm:py-32">
                         <p class="text-lg font-light text-gray-500 mb-4">Freelance Technical Consulting | Hamburg, Germany</p>
                         <h1 class="hero-title text-black max-w-5xl mx-auto">
                             Driving Supply Chain Excellence through Robust X++ Engineering.
@@ -447,8 +734,7 @@
                         <p class="text-xl mt-6 max-w-3xl mx-auto font-light leading-relaxed">
                             Helping manufacturing and distribution enterprises streamline their operations with tailored, high-performance Dynamics 365 SCM solutions.
                         </p>
-                        <!-- CTA 1: Scrolls down to the bigger, final CTA -->
-                        <a href="#contact-en" class="cta-button inline-flex items-center mt-10 px-8 py-3 text-lg font-semibold text-white rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
+                        <a href="https://zcal.co/ahmadkatkhuda" target="_blank" class="cta-button inline-flex items-center mt-10 px-8 py-3 text-lg font-semibold text-white rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
                             Schedule a Free Consultation
                         </a>
                         <p class="text-sm mt-3 text-gray-500">Get a technical roadmap tailored to your D365 environment.</p>
@@ -457,12 +743,13 @@
                     <hr class="border-t border-gray-200 my-16">
                     
                     <!-- D365 SCM Modules (Processes) -->
-                    <section id="modules-en" class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
+                    <span class="section-anchor" id="modules-en"></span>
+                    <section class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <h2 class="text-4xl font-semibold text-center mb-12">
                             Core D365 SCM Expertise: Functional Modules
                         </h2>
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <!-- Modules content here (kept intact) -->
+                            <!-- Modules content here (omitted for brevity) -->
                             <div class="modern-card p-6 rounded-xl flex items-start space-x-4">
                                 <i data-lucide="package" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
                                 <div>
@@ -509,7 +796,8 @@
                     </section>
                     
                     <!-- Service Pillars -->
-                    <section id="services-en" class="py-20">
+                    <span class="section-anchor" id="services-en"></span>
+                    <section class="py-20">
                         <h2 class="text-4xl font-semibold text-center mb-6">
                             My Technical Service Pillars
                         </h2>
@@ -517,7 +805,7 @@
                             A holistic approach to D365 success, ensuring solutions are robust, fast, and scalable.
                         </p>
                         <div class="grid md:grid-cols-3 gap-8">
-                            <!-- Services content here (kept intact) -->
+                            <!-- Services content here (omitted for brevity) -->
                             <div class="modern-card p-8 rounded-2xl">
                                 <i data-lucide="zap" class="dynamic-accent w-8 h-8 mb-4"></i>
                                 <h3 class="text-2xl font-semibold mb-2">Performance & Architecture</h3>
@@ -537,14 +825,15 @@
                     </section>
                     
                     <!-- Technical Toolkit (Icon Grid) -->
-                    <section id="toolkit-en" class="py-16 bg-white">
+                    <span class="section-anchor" id="toolkit-en"></span>
+                    <section class="py-16 bg-white">
                         <h2 class="text-4xl font-semibold text-center mb-6">
                             Technical Toolkit
                         </h2>
                         <p class="text-center text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
                             The core technologies and tools I rely on for robust development and deployment.
                         </p>
-                        <!-- Toolkit content here (kept intact) -->
+                        <!-- Toolkit content here (omitted for brevity) -->
                         <div class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
                             <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="code" class="w-4 h-4 mr-2 dynamic-accent"></i>X++ & C#</span>
                             <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="database" class="w-4 h-4 mr-2 dynamic-accent"></i>MS SQL / SSMS</span>
@@ -558,11 +847,12 @@
                     </section>
 
                     <!-- About Section -->
-                    <section id="about-en" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
+                    <span class="section-anchor" id="about-en"></span>
+                    <section class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <div class="grid lg:grid-cols-3 gap-12 items-center">
                             <!-- Image Column -->
                             <div class="lg:col-span-1 flex justify-center">
-                                <img src="IMG_2853.jpg" onerror="this.src='https://placehold.co/250x300/F5F5F7/999?text=Ahmad+Katkhuda'" alt="Portrait of Ahmad Katkhuda, Dynamics 365 Technical Consultant." class="w-64 h-80 object-cover rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03]">
+                                <img src="https://placehold.co/250x300/F5F5F7/999?text=Ahmad+Katkhuda" alt="Portrait of Ahmad Katkhuda, Dynamics 365 Technical Consultant." class="w-64 h-80 object-cover rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03]">
                             </div>
 
                             <!-- Text Column -->
@@ -586,52 +876,28 @@
                         </div>
                     </section>
 
-                    <!-- Contact/CTA Section (Final CTA) -->
-                    <section id="contact-en" class="text-center py-20">
+                    <!-- Contact/CTA Section -->
+                    <span class="section-anchor" id="contact-en"></span>
+                    <section class="text-center py-20">
                         <h2 class="text-4xl font-semibold mb-6">
                             Ready to Optimize Your Supply Chain?
                         </h2>
                         <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
-                            Let’s discuss your current D365 pain points, performance bottlenecks, or upcoming project requirements. Your first technical review is free.
+                            Let's discuss your current D365 pain points, performance bottlenecks, or upcoming project requirements. Your first technical review is free.
                         </p>
-                        <a href="https://calendly.com/ahmad-katkhuda" target="_blank" class="cta-button inline-flex items-center px-10 py-4 text-xl font-bold text-white rounded-full shadow-2xl transition duration-300 transform hover:scale-[1.05]">
+                        <a href="https://zcal.co/ahmadkatkhuda" target="_blank" class="cta-button inline-flex items-center px-10 py-4 text-xl font-bold text-white rounded-full shadow-2xl transition duration-300 transform hover:scale-[1.05]">
                             Schedule Your Free Consultation
                         </a>
-                    </section>
-
-                    <!-- DSGVO: Impressum Section Placeholder (EN) -->
-                    <section id="impressum-en" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
-                        <h2 class="text-4xl font-semibold mb-6">Legal Notice (Impressum)</h2>
-                        <div class="text-lg font-light text-gray-700 space-y-4">
-                            <p class="font-bold text-red-600">ATTENTION: This is a placeholder section. Please replace this text with your legally required Impressum/Legal Notice.</p>
-                            <p>Information pursuant to § 5 TMG.</p>
-                            <p>Ahmad Katkhuda</p>
-                            <p>[Your Full Address]</p>
-                            <p>[Your Contact Email]</p>
-                            <p>[Your Contact Phone (optional)]</p>
-                            <p>VAT ID (if applicable): [Your VAT ID]</p>
-                        </div>
-                    </section>
-
-                    <!-- DSGVO: Privacy Policy Section Placeholder (EN) -->
-                    <section id="datenschutz-en" class="py-20">
-                        <h2 class="text-4xl font-semibold mb-6">Privacy Policy (Datenschutzerklärung)</h2>
-                        <div class="text-lg font-light text-gray-700 space-y-4">
-                            <p class="font-bold text-red-600">ATTENTION: This is a placeholder section. Please replace this text with your legally required Privacy Policy/Datenschutzerklärung.</p>
-                            <h3 class="text-2xl font-semibold mt-6">Data Collection</h3>
-                            <p>This website is designed to minimize the collection of personal data. No active tracking scripts (like Google Analytics) are embedded.</p>
-                            <h3 class="text-2xl font-semibold mt-6">External Services</h3>
-                            <p>The website uses external services for essential functionality (Tailwind CSS, Lucide Icons, Calendly for booking). These services may collect your IP address. By using the external Calendly link, you are leaving this website and their respective privacy policies apply.</p>
-                        </div>
                     </section>
                 </div>
             </div>
 
-            <!-- GERMAN CONTENT -->
+            <!-- GERMAN CONTENT (Hidden by default) -->
             <div id="content-de" class="hidden relative z-10">
-                <div>
+                <div class="lg:ml-0"> 
                     <!-- Hero Section -->
-                    <section id="hero-de" class="text-center py-20 sm:py-32">
+                    <span class="section-anchor" id="hero-de"></span>
+                    <section class="text-center py-20 sm:py-32">
                         <p class="text-lg font-light text-gray-500 mb-4">Freiberufliche Technische Beratung | Hamburg, Deutschland</p>
                         <h1 class="hero-title text-black max-w-5xl mx-auto">
                             Exzellenz in der Supply Chain durch Robuste X++ Entwicklung.
@@ -639,8 +905,7 @@
                         <p class="text-xl mt-6 max-w-3xl mx-auto font-light leading-relaxed">
                             Ich unterstütze Fertigungs- und Handelsunternehmen dabei, ihre Betriebsabläufe mit maßgeschneiderten, hoch performanten Dynamics 365 SCM Lösungen zu optimieren.
                         </p>
-                        <!-- CTA 1: Scrolls down to the bigger, final CTA -->
-                        <a href="#contact-de" class="cta-button inline-flex items-center mt-10 px-8 py-3 text-lg font-semibold text-white rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
+                        <a href="https://zcal.co/ahmadkatkhuda" target="_blank" class="cta-button inline-flex items-center mt-10 px-8 py-3 text-lg font-semibold text-white rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
                             Kostenloses Beratungsgespräch Buchen
                         </a>
                         <p class="text-sm mt-3 text-gray-500">Erhalten Sie einen technischen Fahrplan, der auf Ihre D365-Umgebung zugeschnitten ist.</p>
@@ -649,12 +914,13 @@
                     <hr class="border-t border-gray-200 my-16">
                     
                     <!-- D365 SCM Modules (Processes) -->
-                    <section id="modules-de" class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
+                    <span class="section-anchor" id="modules-de"></span>
+                    <section class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <h2 class="text-4xl font-semibold text-center mb-12">
                             Kernkompetenz D365 SCM: Funktionale Module
                         </h2>
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <!-- Modules content here (kept intact) -->
+                            <!-- Modules content here (omitted for brevity) -->
                             <div class="modern-card p-6 rounded-xl flex items-start space-x-4">
                                 <i data-lucide="package" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
                                 <div>
@@ -701,7 +967,8 @@
                     </section>
                     
                     <!-- Service Pillars -->
-                    <section id="services-de" class="py-20">
+                    <span class="section-anchor" id="services-de"></span>
+                    <section class="py-20">
                         <h2 class="text-4xl font-semibold text-center mb-6">
                             Meine Technischen Leistungssäulen
                         </h2>
@@ -709,7 +976,6 @@
                             Ein ganzheitlicher Ansatz für den D365-Erfolg, der robuste, schnelle und skalierbare Lösungen gewährleistet.
                         </p>
                         <div class="grid md:grid-cols-3 gap-8">
-                            <!-- Services content here (kept intact) -->
                             <div class="modern-card p-8 rounded-2xl">
                                 <i data-lucide="zap" class="dynamic-accent w-8 h-8 mb-4"></i>
                                 <h3 class="text-2xl font-semibold mb-2">Performance & Architektur</h3>
@@ -729,7 +995,8 @@
                     </section>
                     
                     <!-- Technical Toolkit (Icon Grid) -->
-                    <section id="toolkit-de" class="py-16 bg-white">
+                    <span class="section-anchor" id="toolkit-de"></span>
+                    <section class="py-16 bg-white">
                         <h2 class="text-4xl font-semibold text-center mb-6">
                             Technisches Toolkit
                         </h2>
@@ -737,7 +1004,6 @@
                             Die Kerntechnologien und Werkzeuge, auf die ich für robuste Entwicklung und Implementierung setze.
                         </p>
                         <div class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-                            <!-- Toolkit content here (kept intact) -->
                             <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="code" class="w-4 h-4 mr-2 dynamic-accent"></i>X++ & C#</span>
                             <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="database" class="w-4 h-4 mr-2 dynamic-accent"></i>MS SQL / SSMS</span>
                             <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="cloud" class="w-4 h-4 mr-2 dynamic-accent"></i>Azure DevOps (ADO)</span>
@@ -750,11 +1016,12 @@
                     </section>
 
                     <!-- About Section -->
-                    <section id="about-de" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
+                    <span class="section-anchor" id="about-de"></span>
+                    <section class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
                         <div class="grid lg:grid-cols-3 gap-12 items-center">
                             <!-- Image Column -->
                             <div class="lg:col-span-1 flex justify-center">
-                                <img src="IMG_2853.jpg" onerror="this.src='https://placehold.co/250x300/F5F5F7/999?text=Ahmad+Katkhuda'" alt="Porträt von Ahmad Katkhuda, Dynamics 365 Technical Consultant." class="w-64 h-80 object-cover rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03]">
+                                <img src="https://placehold.co/250x300/F5F5F7/999?text=Ahmad+Katkhuda" alt="Porträt von Ahmad Katkhuda, Dynamics 365 Technical Consultant." class="w-64 h-80 object-cover rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03]">
                             </div>
                             <!-- Text Column -->
                             <div class="lg:col-span-2">
@@ -777,52 +1044,28 @@
                         </div>
                     </section>
 
-                    <!-- Contact/CTA Section (Final CTA) -->
-                    <section id="contact-de" class="text-center py-20">
+                    <!-- Contact/CTA Section -->
+                    <span class="section-anchor" id="contact-de"></span>
+                    <section class="text-center py-20">
                         <h2 class="text-4xl font-semibold mb-6">
                             Bereit, Ihre Supply Chain zu Optimieren?
                         </h2>
                         <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
                             Lassen Sie uns Ihre aktuellen D365-Schwachstellen, Performance-Engpässe oder anstehenden Projektanforderungen besprechen. Ihre erste technische Überprüfung ist kostenlos.
                         </p>
-                        <a href="https://calendly.com/ahmad-katkhuda" target="_blank" class="cta-button inline-flex items-center px-10 py-4 text-xl font-bold text-white rounded-full shadow-2xl transition duration-300 transform hover:scale-[1.05]">
+                        <a href="https://zcal.co/ahmadkatkhuda" target="_blank" class="cta-button inline-flex items-center px-10 py-4 text-xl font-bold text-white rounded-full shadow-2xl transition duration-300 transform hover:scale-[1.05]">
                             Kostenloses Gespräch Buchen
                         </a>
-                    </section>
-
-                    <!-- DSGVO: Impressum Section Placeholder (DE) -->
-                    <section id="impressum-de" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
-                        <h2 class="text-4xl font-semibold mb-6">Impressum</h2>
-                        <div class="text-lg font-light text-gray-700 space-y-4">
-                            <p class="font-bold text-red-600">ACHTUNG: Dies ist ein Platzhalter. Bitte ersetzen Sie diesen Text durch Ihr rechtlich geprüftes Impressum.</p>
-                            <p>Angaben gemäß § 5 TMG.</p>
-                            <p>Ahmad Katkhuda</p>
-                            <p>[Ihre vollständige Adresse]</p>
-                            <p>[Ihre Kontakt-E-Mail]</p>
-                            <p>[Ihre Kontakt-Telefonnummer (optional)]</p>
-                            <p>Umsatzsteuer-ID (falls zutreffend): [Ihre USt-ID]</p>
-                        </div>
-                    </section>
-
-                    <!-- DSGVO: Privacy Policy Section Placeholder (DE) -->
-                    <section id="datenschutz-de" class="py-20">
-                        <h2 class="text-4xl font-semibold mb-6">Datenschutzerklärung</h2>
-                        <div class="text-lg font-light text-gray-700 space-y-4">
-                            <p class="font-bold text-red-600">ACHTUNG: Dies ist ein Platzhalter. Bitte ersetzen Sie diesen Text durch Ihre rechtlich geprüfte Datenschutzerklärung.</p>
-                            <h3 class="text-2xl font-semibold mt-6">Datenerfassung</h3>
-                            <p>Diese Website ist darauf ausgelegt, die Erfassung personenbezogener Daten zu minimieren. Es sind keine aktiven Tracking-Skripte (wie Google Analytics) eingebettet.</p>
-                            <h3 class="text-2xl font-semibold mt-6">Externe Dienste</h3>
-                            <p>Die Website nutzt externe Dienste für wesentliche Funktionen (Tailwind CSS, Lucide Icons, Calendly zur Buchung). Diese Dienste können Ihre IP-Adresse erfassen. Durch die Nutzung des externen Calendly-Links verlassen Sie diese Website und es gelten deren jeweilige Datenschutzbestimmungen.</p>
-                        </div>
                     </section>
                 </div>
             </div>
 
-            <!-- ARABIC CONTENT -->
+            <!-- ARABIC CONTENT (Hidden by default) -->
             <div id="content-ar" class="hidden rtl relative z-10">
-                <div>
+                <div class="lg:mr-0"> 
                     <!-- Hero Section -->
-                    <section id="hero-ar" class="text-center py-20 sm:py-32">
+                    <span class="section-anchor" id="hero-ar"></span>
+                    <section class="text-center py-20 sm:py-32">
                         <p class="text-lg font-light text-gray-500 mb-4">استشارات فنية مستقلة | هامبورغ، ألمانيا</p>
                         <h1 class="hero-title text-black max-w-5xl mx-auto">
                             قيادة التميز في سلاسل الإمداد عبر هندسة X++ متينة.
@@ -830,37 +1073,158 @@
                         <p class="text-xl mt-6 max-w-3xl mx-auto font-light leading-relaxed">
                             أساعد شركات التصنيع والتوزيع على تبسيط عملياتها من خلال حلول Dynamics 365 SCM مخصصة وذات أداء عالٍ.
                         </p>
-                        <!-- CTA 1: Scrolls down to the bigger, final CTA -->
-                        <a href="#contact-ar" class="cta-button inline-flex items-center mt-10 px-8 py-3 text-lg font-semibold text-white rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
+                        <a href="https://zcal.co/ahmadkatkhuda" target="_blank" class="cta-button inline-flex items-center mt-10 px-8 py-3 text-lg font-semibold text-white rounded-full shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.02]">
                             احجز استشارة مجانية
                         </a>
                         <p class="text-sm mt-3 text-gray-500">احصل على خريطة طريق فنية مصممة خصيصًا لبيئة D365 لديك.</p>
                     </section>
 
-                    <!-- DSGVO: Impressum Section Placeholder (AR) -->
-                    <section id="impressum-ar" class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
-                        <h2 class="text-4xl font-semibold mb-6">إشعار قانوني (Impressum)</h2>
-                        <div class="text-lg font-light text-gray-700 space-y-4">
-                            <p class="font-bold text-red-600">تنبيه: هذا قسم نائب. يرجى استبدال هذا النص بالإشعار القانوني/Impressum المطلوب قانونيًا.</p>
-                            <p>المعلومات وفقًا للمادة 5 TMG.</p>
-                            <p>أحمد كتخدا</p>
-                            <p>[عنوانك الكامل]</p>
-                            <p>[بريد الاتصال الخاص بك]</p>
-                            <p>[هاتفك (اختياري)]</p>
-                            <p>رقم تعريف ضريبة القيمة المضافة (إذا كان مطبقًا): [رقم ضريبة القيمة المضافة الخاص بك]</p>
+                    <hr class="border-t border-gray-200 my-16">
+                    
+                    <!-- D365 SCM Modules (Processes) -->
+                    <span class="section-anchor" id="modules-ar"></span>
+                    <section class="py-12 bg-gray-50 rounded-2xl shadow-inner px-8">
+                        <h2 class="text-4xl font-semibold text-center mb-12">
+                            الوحدات الأساسية لخبرة D365 SCM: وحدات العمل
+                        </h2>
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Modules content here (omitted for brevity) -->
+                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
+                                <i data-lucide="package" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-xl font-semibold">إدارة المخزون والمستودعات (WMS)</h3>
+                                    <p class="text-gray-600 mt-1 text-sm">تخصيص وتحسين منطق عمليات المستودعات المتقدمة وتكامل الأجهزة المحمولة ودقة المخزون.</p>
+                                </div>
+                            </div>
+                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
+                                <i data-lucide="factory" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-xl font-semibold">التحكم في الإنتاج</h3>
+                                    <p class="text-gray-600 mt-1 text-sm">هندسة حلول مخصصة للتصنيع المنفصل (discrete) والخفيف (lean)، بما في ذلك قوائم المواد والطرق وتنفيذ أرضية المتجر.</p>
+                                </div>
+                            </div>
+                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
+                                <i data-lucide="truck" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-xl font-semibold">إدارة النقل (TMS)</h3>
+                                    <p class="text-gray-600 mt-1 text-sm">التكامل والتطوير للشحن، مقارنة الأسعار، التوجيه، وتحسين تخطيط الحمولة.</p>
+                                </div>
+                            </div>
+                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
+                                <i data-lucide="shopping-cart" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-xl font-semibold">المشتريات والمصادر</h3>
+                                    <p class="text-gray-600 mt-1 text-sm">توسيع المنطق الأساسي للطلبات وأوامر الشراء وتقييم الموردين والمطابقة الثلاثية.</p>
+                                </div>
+                            </div>
+                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
+                                <i data-lucide="dollar-sign" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-xl font-semibold">المبيعات والتسويق</h3>
+                                    <p class="text-gray-600 mt-1 text-sm">التخصيص الفني لأوامر المبيعات ومحركات التسعير والعمولات والتكامل مع Power Platform.</p>
+                                </div>
+                            </div>
+                            <div class="modern-card p-6 rounded-xl flex items-start space-x-4 module-card-ar">
+                                <i data-lucide="trending-up" class="dynamic-accent w-6 h-6 flex-shrink-0 mt-1"></i>
+                                <div>
+                                    <h3 class="text-xl font-semibold">التخطيط الرئيسي (MRP)</h3>
+                                    <p class="text-gray-600 mt-1 text-sm">ضبط الأداء وتخصيص منطق التخطيط لضمان المتطلبات الصحيحة للمواد والقدرة الإنتاجية.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Service Pillars -->
+                    <span class="section-anchor" id="services-ar"></span>
+                    <section class="py-20">
+                        <h2 class="text-4xl font-semibold text-center mb-6">
+                            ركائز الخدمات الفنية
+                        </h2>
+                        <p class="text-center text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+                            نهج شامل لنجاح D365، يضمن أن تكون الحلول قوية وسريعة وقابلة للتطوير.
+                        </p>
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="modern-card p-8 rounded-2xl">
+                                <i data-lucide="zap" class="dynamic-accent w-8 h-8 mb-4"></i>
+                                <h3 class="text-2xl font-semibold mb-2">الأداء والهندسة المعمارية</h3>
+                                <p class="text-gray-600">عمليات تدقيق الأداء المتعمقة، تحسين استعلامات SQL، إصلاحات تجميع CIL، والتصميم الفني لعمليات النشر الكبيرة للمؤسسات.</p>
+                            </div>
+                            <div class="modern-card p-8 rounded-2xl">
+                                <i data-lucide="code" class="dynamic-accent w-8 h-8 mb-4"></i>
+                                <h3 class="text-2xl font-semibold mb-2">التطوير والتكامل (X++ / C#)</h3>
+                                <p class="text-gray-600">تطوير شامل للتخصيصات، تكامل حلول ISV، كيانات البيانات لواجهات برمجة التطبيقات الخارجية (APIs)، وإدارة خدمات دورة الحياة (LCS).</p>
+                            </div>
+                            <div class="modern-card p-8 rounded-2xl">
+                                <i data-lucide="git-branch" class="dynamic-accent w-8 h-8 mb-4"></i>
+                                <h3 class="text-2xl font-semibold mb-2">Azure DevOps ودورة الحياة</h3>
+                                <p class="text-gray-600">إعداد خطوط أنابيب البناء والإصدار الآلية (CI/CD)، استراتيجيات التحكم في الإصدار، إدارة البيئة، والالتزام بأفضل الممارسات.</p>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Technical Toolkit (Icon Grid) -->
+                    <span class="section-anchor" id="toolkit-ar"></span>
+                    <section class="py-16 bg-white">
+                        <h2 class="text-4xl font-semibold text-center mb-6">
+                            مجموعة الأدوات الفنية
+                        </h2>
+                        <p class="text-center text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+                            التقنيات والأدوات الأساسية التي أعتمد عليها لتقديم تطوير ونشر قوي.
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="code" class="w-4 h-4 ml-2 dynamic-accent"></i>X++ & C#</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="database" class="w-4 h-4 ml-2 dynamic-accent"></i>MS SQL / SSMS</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="cloud" class="w-4 h-4 ml-2 dynamic-accent"></i>Azure DevOps (ADO)</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="columns-3" class="w-4 h-4 ml-2 dynamic-accent"></i>Dynamics AX 2012 / 2009</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="puzzle" class="w-4 h-4 ml-2 dynamic-accent"></i>تكامل Power Platform</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="list-checks" class="w-4 h-4 ml-2 dynamic-accent"></i>هندسة المتطلبات</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="maximize-2" class="w-4 h-4 ml-2 dynamic-accent"></i>ضبط الأداء</span>
+                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-300 shadow-sm transition hover:bg-gray-200"><i data-lucide="server" class="w-4 h-4 ml-2 dynamic-accent"></i>LCS / إدارة البيئة</span>
                         </div>
                     </section>
 
-                    <!-- DSGVO: Privacy Policy Section Placeholder (AR) -->
-                    <section id="datenschutz-ar" class="py-20">
-                        <h2 class="text-4xl font-semibold mb-6">سياسة الخصوصية (Datenschutzerklärung)</h2>
-                        <div class="text-lg font-light text-gray-700 space-y-4">
-                            <p class="font-bold text-red-600">تنبيه: هذا قسم نائب. يرجى استبدال هذا النص بسياسة الخصوصية/Datenschutzerklärung المطلوبة قانونيًا.</p>
-                            <h3 class="text-2xl font-semibold mt-6">جمع البيانات</h3>
-                            <p>تم تصميم هذا الموقع لتقليل جمع البيانات الشخصية. لا يتم تضمين نصوص تتبع نشطة (مثل Google Analytics).</p>
-                            <h3 class="text-2xl font-semibold mt-6">الخدمات الخارجية</h3>
-                            <p>يستخدم الموقع خدمات خارجية للوظائف الأساسية (Tailwind CSS، Lucide Icons، Calendly للحجز). قد تقوم هذه الخدمات بجمع عنوان IP الخاص بك. باستخدام رابط Calendly الخارجي، فإنك تغادر هذا الموقع وتطبق سياسات الخصوصية الخاصة بهم.</p>
+                    <!-- About Section -->
+                    <span class="section-anchor" id="about-ar"></span>
+                    <section class="py-20 bg-gray-50 rounded-2xl shadow-inner px-8">
+                        <div class="grid lg:grid-cols-3 gap-12 items-center">
+                            <!-- Image Column (Order reversed for RTL) -->
+                            <div class="lg:col-span-1 lg:order-last flex justify-center">
+                                <img src="https://placehold.co/250x300/F5F5F7/999?text=Ahmad+Katkhuda" alt="صورة لأحمد كتخدا، مستشار فني Dynamics 365." class="w-64 h-80 object-cover rounded-xl shadow-2xl transition duration-300 transform hover:scale-[1.03]">
+                            </div>
+
+                            <!-- Text Column -->
+                            <div class="lg:col-span-2 lg:order-first">
+                                <h2 class="text-4xl font-semibold mb-6">
+                                    عن أحمد كتخدا
+                                </h2>
+                                <p class="text-lg font-light text-gray-700 mb-4">
+                                    أنا مستشار فني كبير ملتزم ولدي أكثر من ثماني سنوات من الخبرة العميقة في نظام Microsoft Dynamics ERP، متخصص في الهندسة المعمارية والتطوير الفني لـ Dynamics 365 Finance & Supply Chain Management.
+                                </p>
+                                <p class="text-lg font-light text-gray-700 mb-4">
+                                    تكمن قوتي الفريدة في دعم وتصميم العمليات الشاملة (خاصة في الإنتاج والمشتريات والمبيعات) من خلال الجمع بين المعرفة التقنية العميقة في X++ و SQL والفهم الحاد لتحسين العمليات التجارية. أركز على تقديم حلول قوية وعالية الأداء وسليمة من الناحية المعمارية.
+                                </p>
+                                
+                                <div class="mt-6 flex flex-wrap gap-4 justify-end">
+                                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white rounded-full border border-gray-300 shadow-sm"><i data-lucide="award" class="w-4 h-4 ml-2 dynamic-accent"></i>أكثر من 8 سنوات خبرة</span>
+                                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white rounded-full border border-gray-300 shadow-sm"><i data-lucide="graduation-cap" class="w-4 h-4 ml-2 dynamic-accent"></i>بكالوريوس هندسة الحاسوب</span>
+                                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium bg-white rounded-full border border-gray-300 shadow-sm"><i data-lucide="map-pin" class="w-4 h-4 ml-2 dynamic-accent"></i>المقر في هامبورغ، ألمانيا</span>
+                                </div>
+                            </div>
                         </div>
+                    </section>
+
+                    <!-- Contact/CTA Section -->
+                    <span class="section-anchor" id="contact-ar"></span>
+                    <section class="text-center py-20">
+                        <h2 class="text-4xl font-semibold mb-6">
+                            هل أنت مستعد لتحسين سلسلة الإمداد لديك؟
+                        </h2>
+                        <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
+                            دعنا نناقش نقاط الضعف الحالية في D365، أو عنق الزجاجة في الأداء، أو متطلبات مشروعك القادمة. مراجعتك الفنية الأولى مجانية.
+                        </p>
+                        <a href="https://zcal.co/ahmadkatkhuda" target="_blank" class="cta-button inline-flex items-center px-10 py-4 text-xl font-bold text-white rounded-full shadow-2xl transition duration-300 transform hover:scale-[1.05]">
+                            احجز استشارتك المجانية
+                        </a>
                     </section>
                 </div>
             </div>
@@ -881,8 +1245,12 @@
                 &copy; 2025 Ahmad Katkhuda. All Rights Reserved.
             </p>
 
-            <!-- Social Links -->
+            <!-- 2. Humanization & Trust: Social Links -->
             <div class="flex space-x-6 mb-4 md:mb-0">
+                <!-- NEW: Legal Links added here, pointing to new file -->
+                <a href="impressum.html#imprint" id="footer-imprint-link" class="text-gray-400 hover:dynamic-accent transition duration-150 text-sm font-medium" aria-label="Imprint Page">Imprint</a>
+                <a href="impressum.html#privacy" id="footer-privacy-link" class="text-gray-400 hover:dynamic-accent transition duration-150 text-sm font-medium" aria-label="Privacy Policy Page">Privacy Policy</a>
+                
                 <a href="https://www.linkedin.com/in/ahmadkatkhuda" target="_blank" class="text-gray-400 hover:dynamic-accent transition duration-150" aria-label="LinkedIn Profile">
                     <i data-lucide="linkedin" class="w-6 h-6"></i>
                 </a>
@@ -892,25 +1260,44 @@
             </div>
 
             <!-- Language Switcher in Footer -->
-            <div class="relative group">
-                <button class="flex items-center text-white hover:dynamic-accent p-2 rounded-md transition duration-150" aria-label="Select Language">
+            <div class="relative footer-language-dropdown">
+                <button class="flex items-center text-white hover:dynamic-accent p-2 rounded-md transition duration-150 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50" aria-label="Select Language" aria-expanded="false">
                     <i data-lucide="globe" class="w-5 h-5"></i>
                     <span class="ml-2 text-sm font-medium">Language</span>
                 </button>
                 <!-- Dropdown Content -->
-                <div class="absolute bottom-full right-0 mb-0 w-32 bg-white rounded-lg shadow-xl footer-dropdown-content origin-bottom">
-                    <a href="#en" onclick="switchLanguage('en');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">English</a>
-                    <a href="#de" onclick="switchLanguage('de');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">Deutsch</a>
-                    <a href="#ar" onclick="switchLanguage('ar');" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150">العربية</a>
+                <div class="absolute bottom-full right-0 mb-0 w-32 bg-white rounded-lg shadow-xl footer-dropdown-content origin-bottom" role="menu">
+                    <a href="#en" onclick="switchLanguage('en'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
+                    <a href="#de" onclick="switchLanguage('de'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
+                    <a href="#ar" onclick="switchLanguage('ar'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
                 </div>
-            </div>
-
-            <!-- DSGVO: Added Impressum and Datenschutz links to the footer -->
-            <div class="flex space-x-4 mt-4 md:mt-0">
-                <a href="#impressum-en" onclick="switchLanguage(currentLang === 'de' ? 'de' : currentLang === 'ar' ? 'ar' : 'en');" class="text-sm text-gray-400 hover:dynamic-accent transition duration-150">Impressum</a>
-                <a href="#datenschutz-en" onclick="switchLanguage(currentLang === 'de' ? 'de' : currentLang === 'ar' ? 'ar' : 'en');" class="text-sm text-gray-400 hover:dynamic-accent transition duration-150">Datenschutz</a>
             </div>
         </div>
     </footer>
+    
+    <!-- --- DSGVO COOKIE CONSENT POP-UP MODAL (Hidden by default) --- -->
+    <div id="cookie-modal-overlay" class="cookie-modal-overlay">
+        <div class="cookie-modal">
+            <h3 id="cookie-title" class="text-2xl font-bold mb-4">Cookie Consent</h3>
+            <p id="cookie-text" class="text-gray-600 mb-6 text-sm leading-relaxed">We use non-mandatory cookies to analyze traffic and improve user experience. You can choose to accept all, or only mandatory cookies.</p>
+            
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-between">
+                <!-- Accept All button (Intuitional/Primary) -->
+                <button id="btn-accept-all" onclick="handleConsent('accepted')" class="btn-accept-all w-full sm:w-1/2 px-6 py-3 rounded-xl font-bold text-base shadow-lg hover:shadow-xl border-2">
+                    Accept All & Continue
+                </button>
+                
+                <!-- Mandatory Only button (Secondary) -->
+                <button id="btn-mandatory-only" onclick="handleConsent('mandatory')" class="btn-mandatory w-full sm:w-1/2 px-6 py-3 rounded-xl font-bold text-base shadow-lg border-2">
+                    Accept Mandatory Only
+                </button>
+            </div>
+            
+            <p class="mt-6 text-xs text-center text-gray-500">
+                For more details, see our <a href="impressum.html#privacy" class="underline hover:text-gray-700">Privacy Policy</a> and <a href="impressum.html#imprint" class="underline hover:text-gray-700">Imprint</a>.
+            </p>
+        </div>
+    </div>
+    <!-- --- END COOKIE MODAL --- -->
 </body>
 </html>
