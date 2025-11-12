@@ -5,9 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Microsoft-Certified Dynamics 365 SCM Technical Consultant (X++, C#). Specializing in performance optimization, architecture, and agile DevOps for manufacturing and distribution enterprises.">
     <title>Ahmad Katkhuda | D365 SCM Technical Consultant</title>
+    
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Load Lucide Icons (without defer) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
         /* Custom styles for an Apple-inspired, premium, and clean look */
         :root {
@@ -238,354 +246,379 @@
         .btn-mandatory:hover {
             background-color: var(--color-medium);
         }
-
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <!-- MAIN SCRIPT - CORRECTED VERSION -->
     <script>
-        // --- DSGVO COOKIE CONSENT LOGIC ---
-        const COOKIE_CONSENT_KEY = 'dsgvo_cookie_consent';
-        const COOKIE_EXPIRY_DAYS = 365;
+    // --- DSGVO COOKIE CONSENT LOGIC ---
+    const COOKIE_CONSENT_KEY = 'dsgvo_cookie_consent';
+    const COOKIE_EXPIRY_DAYS = 365;
+    let currentLang = 'en';
+
+    const translations = {
+        en: {
+            title: 'Cookie Consent',
+            text: 'We use non-mandatory cookies to analyze traffic and improve user experience. You can choose to accept all, or only mandatory cookies.',
+            acceptAll: 'Accept All & Continue',
+            mandatoryOnly: 'Accept Mandatory Only',
+            imprint: 'Imprint',
+            privacy: 'Privacy Policy',
+            navModules: 'Modules',
+            navServices: 'Services',
+            navToolkit: 'Toolkit',
+            navAbout: 'About',
+            navContact: 'Contact'
+        },
+        de: {
+            title: 'Cookie-Zustimmung',
+            text: 'Wir verwenden nicht zwingend notwendige Cookies, um den Traffic zu analysieren und die Benutzererfahrung zu verbessern. Sie können alle Cookies oder nur die notwendigen Cookies akzeptieren.',
+            acceptAll: 'Alle Akzeptieren & Fortfahren',
+            mandatoryOnly: 'Nur Notwendige Akzeptieren',
+            imprint: 'Impressum',
+            privacy: 'Datenschutzerklärung',
+            navModules: 'Module',
+            navServices: 'Services',
+            navToolkit: 'Toolkit',
+            navAbout: 'Über mich',
+            navContact: 'Kontakt'
+        },
+        ar: {
+            title: 'الموافقة على ملفات تعريف الارتباط',
+            text: 'نستخدم ملفات تعريف الارتباط غير الإلزامية لتحليل حركة المرور وتحسين تجربة المستخدم. يمكنك اختيار قبول الجميع، أو ملفات تعريف الارتباط الإلزامية فقط.',
+            acceptAll: 'قبول الكل والمتابعة',
+            mandatoryOnly: 'قبول الإلزامي فقط',
+            imprint: 'بيانات الشركة',
+            privacy: 'سياسة الخصوصية',
+            navModules: 'الوحدات',
+            navServices: 'الخدمات',
+            navToolkit: 'الأدوات',
+            navAbout: 'عني',
+            navContact: 'اتصل'
+        }
+    };
+
+    // --- EVENT LISTENER FUNCTIONS ---
+
+    function handleLanguageSwitch(e, lang) {
+        e.preventDefault();
+        switchLanguage(lang);
+        return false;
+    }
+
+    function handleCookieAccept() {
+        handleConsent('accepted');
+    }
+
+    function handleCookieMandatory() {
+        handleConsent('mandatory');
+    }
+
+    function handleMobileMenuClick(e) {
+        const menuToggle = document.getElementById('menu-toggle');
+        if (menuToggle) {
+            menuToggle.checked = false;
+        }
+    }
+
+    function handleMobileMenuToggle() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
         
-        // Default language - match initial visible content
-        let currentLang = 'en';
-        
-        // Functions for multi-language display
-        const translations = {
-            en: {
-                title: 'Cookie Consent',
-                text: 'We use non-mandatory cookies to analyze traffic and improve user experience. You can choose to accept all, or only mandatory cookies.',
-                acceptAll: 'Accept All & Continue',
-                mandatoryOnly: 'Accept Mandatory Only',
-                imprint: 'Imprint',
-                privacy: 'Privacy Policy',
-                navModules: 'Modules',
-                navServices: 'Services',
-                navToolkit: 'Toolkit',
-                navAbout: 'About',
-                navContact: 'Contact'
-            },
-            de: {
-                title: 'Cookie-Zustimmung',
-                text: 'Wir verwenden nicht zwingend notwendige Cookies, um den Traffic zu analysieren und die Benutzererfahrung zu verbessern. Sie können alle Cookies oder nur die notwendigen Cookies akzeptieren.',
-                acceptAll: 'Alle Akzeptieren & Fortfahren',
-                mandatoryOnly: 'Nur Notwendige Akzeptieren',
-                imprint: 'Impressum',
-                privacy: 'Datenschutzerklärung',
-                navModules: 'Module',
-                navServices: 'Services',
-                navToolkit: 'Toolkit',
-                navAbout: 'Über mich',
-                navContact: 'Kontakt'
-            },
-            ar: {
-                title: 'الموافقة على ملفات تعريف الارتباط',
-                text: 'نستخدم ملفات تعريف الارتباط غير الإلزامية لتحليل حركة المرور وتحسين تجربة المستخدم. يمكنك اختيار قبول الجميع، أو ملفات تعريف الارتباط الإلزامية فقط.',
-                acceptAll: 'قبول الكل والمتابعة',
-                mandatoryOnly: 'قبول الإلزامي فقط',
-                imprint: 'بيانات الشركة',
-                privacy: 'سياسة الخصوصية',
-                navModules: 'الوحدات',
-                navServices: 'الخدمات',
-                navToolkit: 'الأدوات',
-                navAbout: 'عني',
-                navContact: 'اتصل'
-            }
-        };
-        
-        function setCookie(name, value, days) {
-            try {
-                let expires = "";
-                if (days) {
-                    const date = new Date();
-                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                    expires = "; expires=" + date.toUTCString();
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+                } else {
+                    mobileMenu.style.maxHeight = '0';
                 }
-                document.cookie = name + "=" + (value || "") + expires + "; path=/; secure; samesite=Lax";
-                return true;
-            } catch (error) {
-                console.error('Error setting cookie:', error);
-                return false;
-            }
+            });
         }
-        
-        function getCookie(name) {
-            try {
-                const nameEQ = name + "=";
-                const ca = document.cookie.split(';');
-                for(let i = 0; i < ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-                }
-                return null;
-            } catch (error) {
-                console.error('Error reading cookie:', error);
-                return null;
+    }
+
+    // --- CORE FUNCTIONS ---
+
+    function setCookie(name, value, days) {
+        try {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
             }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/; secure; samesite=Lax";
+            return true;
+        } catch (error) {
+            console.error('Error setting cookie:', error);
+            return false;
         }
-        
-        function updateNavigationText(lang) {
-            try {
-                const t = translations[lang];
-                // Update desktop navigation
-                const navLinks = document.querySelectorAll('nav a[data-nav-key]');
-                navLinks.forEach(link => {
-                    const key = link.getAttribute('data-nav-key');
-                    if (t[key]) {
-                        link.textContent = t[key];
-                    }
-                });
-                
-                // Update mobile navigation
-                const mobileNavLinks = document.querySelectorAll('#mobile-menu a[data-nav-key]');
-                mobileNavLinks.forEach(link => {
-                    const key = link.getAttribute('data-nav-key');
-                    if (t[key]) {
-                        link.textContent = t[key];
-                    }
-                });
-            } catch (error) {
-                console.error('Error updating navigation text:', error);
+    }
+
+    function getCookie(name) {
+        try {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
             }
+            return null;
+        } catch (error) {
+            console.error('Error reading cookie:', error);
+            return null;
         }
-        
-        function updateModalText(lang) {
-            try {
-                const t = translations[lang];
-                document.getElementById('cookie-title').textContent = t.title;
-                document.getElementById('cookie-text').textContent = t.text;
-                document.getElementById('btn-accept-all').textContent = t.acceptAll;
-                document.getElementById('btn-mandatory-only').textContent = t.mandatoryOnly;
-                
-                // Update Footer Links
-                document.getElementById('footer-imprint-link').textContent = t.imprint;
-                document.getElementById('footer-privacy-link').textContent = t.privacy;
-                
-                // Update navigation text
-                updateNavigationText(lang);
-            } catch (error) {
-                console.error('Error updating modal text:', error);
+    }
+
+    function updateNavigationText(lang) {
+        try {
+            const t = translations[lang];
+            const navLinks = document.querySelectorAll('nav a[data-nav-key]');
+            navLinks.forEach(link => {
+                const key = link.getAttribute('data-nav-key');
+                if (t[key]) link.textContent = t[key];
+            });
+            const mobileNavLinks = document.querySelectorAll('#mobile-menu a[data-nav-key]');
+            mobileNavLinks.forEach(link => {
+                const key = link.getAttribute('data-nav-key');
+                if (t[key]) link.textContent = t[key];
+            });
+        } catch (error) {
+            console.error('Error updating navigation text:', error);
+        }
+    }
+
+    function updateModalText(lang) {
+        try {
+            const t = translations[lang];
+            document.getElementById('cookie-title').textContent = t.title;
+            document.getElementById('cookie-text').textContent = t.text;
+            document.getElementById('btn-accept-all').textContent = t.acceptAll;
+            document.getElementById('btn-mandatory-only').textContent = t.mandatoryOnly;
+            document.getElementById('footer-imprint-link').textContent = t.imprint;
+            document.getElementById('footer-privacy-link').textContent = t.privacy;
+            updateNavigationText(lang);
+        } catch (error) {
+            console.error('Error updating modal text:', error);
+        }
+    }
+
+    function switchLanguage(lang) {
+        try {
+            if (!['en', 'de', 'ar'].includes(lang)) {
+                console.warn('Invalid language:', lang);
+                lang = 'en';
             }
-        }
-        
-        function switchLanguage(lang) {
-            try {
-                // Validate language
-                if (!['en', 'de', 'ar'].includes(lang)) {
-                    console.warn('Invalid language:', lang);
+            ['en', 'de', 'ar'].forEach(l => {
+                const element = document.getElementById(`content-${l}`);
+                if (element) element.classList.add('hidden');
+            });
+            const selectedContent = document.getElementById(`content-${lang}`);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+            } else {
+                const fallbackContent = document.getElementById('content-en');
+                if (fallbackContent) {
+                    fallbackContent.classList.remove('hidden');
                     lang = 'en';
                 }
-        
-                // Hide all content blocks
-                const contentBlocks = ['en', 'de', 'ar'];
-                contentBlocks.forEach(l => {
-                    const element = document.getElementById(`content-${l}`);
-                    if (element) {
-                        element.classList.add('hidden');
-                    } else {
-                        console.warn('Content block not found:', `content-${l}`);
-                    }
-                });
-        
-                // Show selected content block
-                const selectedContent = document.getElementById(`content-${lang}`);
-                if (selectedContent) {
-                    selectedContent.classList.remove('hidden');
-                } else {
-                    console.error('Selected content block not found:', `content-${lang}`);
-                    // Fallback to English
-                    const fallbackContent = document.getElementById('content-en');
-                    if (fallbackContent) {
-                        fallbackContent.classList.remove('hidden');
-                        lang = 'en';
-                    }
-                }
-        
-                // Update HTML lang attribute
-                document.documentElement.lang = lang;
-        
-                // Set body direction and alignment based on language
-                const body = document.body;
-                if (lang === 'ar') {
-                    body.classList.add('rtl');
-                    body.classList.remove('ltr');
-                } else {
-                    body.classList.remove('rtl');
-                    body.classList.add('ltr');
-                }
-                currentLang = lang;
-                
-                // Update all legal/static text elements
-                updateModalText(lang);
-                
-                // Update navigation links to point to current language sections
-                updateNavigationLinks(lang);
-                
-                // Close mobile menu if open
-                const menuToggle = document.getElementById('menu-toggle');
-                if (menuToggle && menuToggle.checked) {
-                    menuToggle.checked = false;
-                }
-                
-                // Update the display for the desktop language switcher
-                const currentLangDisplay = document.getElementById('current-lang-display');
-                if (currentLangDisplay) {
-                    currentLangDisplay.textContent = lang.toUpperCase();
-                }
-                
-                // Update the URL hash without scrolling
-                history.replaceState(undefined, undefined, `#${lang}`);
-                
-                // Initialize Lucide icons after content change
-                initializeIcons();
-                
-            } catch (error) {
-                console.error('Error switching language:', error);
             }
-        }
-        
-        function updateNavigationLinks(lang) {
-            try {
-                // Update all navigation links to point to current language sections
-                const navLinks = document.querySelectorAll('a[data-section]');
-                navLinks.forEach(link => {
-                    const section = link.getAttribute('data-section');
-                    link.href = `#${section}-${lang}`;
-                });
-                
-                // Update logo link
-                const logoLink = document.querySelector('a[data-logo-link]');
-                if (logoLink) {
-                    logoLink.href = `#hero-${lang}`;
-                }
-            } catch (error) {
-                console.error('Error updating navigation links:', error);
-            }
-        }
-        
-        function initializeIcons() {
-            // Initialize Lucide icons with error handling
-            if (typeof lucide !== 'undefined') {
-                try {
-                    lucide.createIcons();
-                } catch (iconError) {
-                    console.warn('Error initializing Lucide icons:', iconError);
-                    // Retry after a short delay
-                    setTimeout(() => {
-                        if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                            lucide.createIcons();
-                        }
-                    }, 100);
-                }
+            document.documentElement.lang = lang;
+            const body = document.body;
+            if (lang === 'ar') {
+                body.classList.add('rtl');
+                body.classList.remove('ltr');
             } else {
-                // Lucide not loaded yet, wait and retry
-                setTimeout(initializeIcons, 50);
+                body.classList.remove('rtl');
+                body.classList.add('ltr');
             }
+            currentLang = lang;
+            updateModalText(lang);
+            updateNavigationLinks(lang);
+            const menuToggle = document.getElementById('menu-toggle');
+            if (menuToggle && menuToggle.checked) menuToggle.checked = false;
+            const currentLangDisplay = document.getElementById('current-lang-display');
+            if (currentLangDisplay) currentLangDisplay.textContent = lang.toUpperCase();
+            history.replaceState(undefined, undefined, `#${lang}`);
+            initializeIcons();
+        } catch (error) {
+            console.error('Error switching language:', error);
         }
-        
-        function handleConsent(status) {
+    }
+
+    function updateNavigationLinks(lang) {
+        try {
+            const navLinks = document.querySelectorAll('a[data-section]');
+            navLinks.forEach(link => {
+                const section = link.getAttribute('data-section');
+                link.href = `#${section}-${lang}`;
+            });
+            const logoLink = document.querySelector('a[data-logo-link]');
+            if (logoLink) logoLink.href = `#hero-${lang}`;
+        } catch (error) {
+            console.error('Error updating navigation links:', error);
+        }
+    }
+
+    function initializeIcons() {
+        // Wait for Lucide to be available
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
             try {
-                // Status can be 'accepted' or 'mandatory'
-                if (setCookie(COOKIE_CONSENT_KEY, status, COOKIE_EXPIRY_DAYS)) {
-                    document.getElementById('cookie-modal-overlay').classList.remove('show');
-                    
-                    if (status === 'accepted') {
-                        loadNonMandatoryScripts();
+                lucide.createIcons();
+                console.log('Lucide icons initialized successfully');
+            } catch (iconError) {
+                console.warn('Error initializing Lucide icons:', iconError);
+                // Retry with exponential backoff
+                setTimeout(() => {
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
                     }
-                } else {
-                    console.error('Failed to set cookie consent');
-                }
-            } catch (error) {
-                console.error('Error handling consent:', error);
+                }, 500);
             }
+        } else {
+            // Lucide not loaded yet, wait and retry
+            console.warn('Lucide not available, retrying...');
+            setTimeout(initializeIcons, 100);
         }
-        
-        // Placeholder for non-mandatory scripts (like analytics)
-        function loadNonMandatoryScripts() {
-            try {
-                console.log("Non-mandatory cookies/scripts (e.g., Google Analytics) loaded.");
-                // In a real application, you would dynamically load your analytics scripts here
-                // e.g. inject <script src="analytics.js"></script>
-            } catch (error) {
-                console.error('Error loading non-mandatory scripts:', error);
+    }
+
+    function handleConsent(status) {
+        try {
+            if (setCookie(COOKIE_CONSENT_KEY, status, COOKIE_EXPIRY_DAYS)) {
+                document.getElementById('cookie-modal-overlay').classList.remove('show');
+                if (status === 'accepted') loadNonMandatoryScripts();
+            } else {
+                console.error('Failed to set cookie consent');
             }
+        } catch (error) {
+            console.error('Error handling consent:', error);
         }
-        
-        function checkConsent() {
-            try {
-                const consent = getCookie(COOKIE_CONSENT_KEY);
-                if (!consent) {
-                    // Show the modal/pop-up
-                    document.getElementById('cookie-modal-overlay').classList.add('show');
-                } else if (consent === 'accepted') {
-                    // Load non-mandatory scripts if already accepted
-                    loadNonMandatoryScripts();
-                } else {
-                    // Only mandatory scripts are running (the core HTML/CSS/JS)
-                    console.log("Consent found: Mandatory only. Non-mandatory scripts blocked.");
-                }
-            } catch (error) {
-                console.error('Error checking consent:', error);
-            }
+    }
+
+    function loadNonMandatoryScripts() {
+        try {
+            console.log("Non-mandatory cookies/scripts loaded.");
+        } catch (error) {
+            console.error('Error loading non-mandatory scripts:', error);
         }
-        
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                // Set initial cookie modal text to English (matching initial content)
-                updateModalText('en');
-                
-                // Check URL hash for language preference, otherwise default to 'en'
-                const hash = window.location.hash.substring(1);
-                if (['en', 'de', 'ar'].includes(hash)) {
-                    switchLanguage(hash);
-                } else {
-                    // Default to English to match initial visible content
-                    switchLanguage('en'); 
-                }
-                
-                // Run cookie check after language is set
-                checkConsent();
-        
-                // Scroll to Top Logic
-                const scrollToTopBtn = document.getElementById('scroll-to-top');
-                if (scrollToTopBtn) {
-                    window.onscroll = function() {
-                        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                            scrollToTopBtn.style.opacity = "1";
-                            scrollToTopBtn.style.transform = "translateY(0)";
-                        } else {
-                            scrollToTopBtn.style.opacity = "0";
-                            scrollToTopBtn.style.transform = "translateY(10px)";
-                        }
-                    };
-                    scrollToTopBtn.onclick = function() {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    };
-                }
-                
-                // Initialize icons after everything is loaded
-                setTimeout(initializeIcons, 100);
-                
-            } catch (error) {
-                console.error('Error during initialization:', error);
+    }
+
+    function checkConsent() {
+        try {
+            const consent = getCookie(COOKIE_CONSENT_KEY);
+            if (!consent) {
+                document.getElementById('cookie-modal-overlay').classList.add('show');
+            } else if (consent === 'accepted') {
+                loadNonMandatoryScripts();
+            } else {
+                console.log("Consent found: Mandatory only. Non-mandatory scripts blocked.");
             }
-        });
-        
-        // Keyboard navigation for dropdowns
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                // Close dropdowns on escape
-                document.querySelectorAll('.dropdown-content, .footer-dropdown-content').forEach(dropdown => {
-                    dropdown.style.opacity = '0';
-                    dropdown.style.pointerEvents = 'none';
+        } catch (error) {
+            console.error('Error checking consent:', error);
+        }
+    }
+
+    // --- INITIALIZE ALL EVENT LISTENERS ---
+    function initializeEventListeners() {
+        try {
+            // Cookie modal buttons
+            const acceptAllBtn = document.getElementById('btn-accept-all');
+            const mandatoryOnlyBtn = document.getElementById('btn-mandatory-only');
+            
+            if (acceptAllBtn) {
+                acceptAllBtn.addEventListener('click', handleCookieAccept);
+            }
+            if (mandatoryOnlyBtn) {
+                mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
+            }
+
+            // Language dropdown links
+            const langLinks = document.querySelectorAll('a[href="#en"], a[href="#de"], a[href="#ar"]');
+            langLinks.forEach(link => {
+                const lang = link.getAttribute('href').substring(1);
+                link.addEventListener('click', (e) => handleLanguageSwitch(e, lang));
+            });
+
+            // Mobile menu links
+            const mobileMenuLinks = document.querySelectorAll('#mobile-menu a[data-section]');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', handleMobileMenuClick);
+            });
+
+            // Mobile menu toggle
+            handleMobileMenuToggle();
+
+            // Scroll to top button
+            const scrollToTopBtn = document.getElementById('scroll-to-top');
+            if (scrollToTopBtn) {
+                scrollToTopBtn.addEventListener('click', function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
-        });
-        </script>
+
+            console.log('All event listeners initialized successfully');
+        } catch (error) {
+            console.error('Error initializing event listeners:', error);
+        }
+    }
+
+    // --- MAIN INITIALIZATION ---
+    function initializeEverything() {
+        try {
+            // Initialize language and content first
+            updateModalText('en');
+            const hash = window.location.hash.substring(1);
+            if (['en', 'de', 'ar'].includes(hash)) {
+                switchLanguage(hash);
+            } else {
+                switchLanguage('en');
+            }
+            
+            // Initialize all event listeners
+            initializeEventListeners();
+            
+            // Check cookie consent
+            checkConsent();
+
+            // Initialize icons with a slight delay to ensure DOM is ready
+            setTimeout(initializeIcons, 200);
+            
+            // Scroll to Top Logic
+            const scrollToTopBtn = document.getElementById('scroll-to-top');
+            if (scrollToTopBtn) {
+                window.onscroll = function() {
+                    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                        scrollToTopBtn.style.opacity = "1";
+                        scrollToTopBtn.style.transform = "translateY(0)";
+                    } else {
+                        scrollToTopBtn.style.opacity = "0";
+                        scrollToTopBtn.style.transform = "translateY(10px)";
+                    }
+                };
+            }
+            
+            console.log('All components initialized successfully');
+        } catch (error) {
+            console.error('Error during initialization:', error);
+        }
+    }
+
+    // Update your DOMContentLoaded event listener
+    document.addEventListener('DOMContentLoaded', initializeEverything);
+
+    // Keyboard navigation for dropdowns
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.dropdown-content, .footer-dropdown-content').forEach(dropdown => {
+                dropdown.style.opacity = '0';
+                dropdown.style.pointerEvents = 'none';
+            });
+        }
+    });
+    </script>
 </head>
 <body class="text-gray-900">
     
+    <!-- Your existing body content remains exactly the same -->
     <header class="header-bg text-white shadow-lg sticky top-0 z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             
@@ -662,9 +695,9 @@
                         <span class="ml-1 text-sm font-medium uppercase" id="current-lang-display">EN</span>
                     </button>
                     <div class="absolute right-0 top-full mt-0 w-32 bg-white rounded-lg shadow-xl dropdown-content origin-top" role="menu">
-                        <a href="#en" onclick="switchLanguage('en'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
-                        <a href="#de" onclick="switchLanguage('de'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
-                        <a href="#ar" onclick="switchLanguage('ar'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
+                        <a href="#en" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
+                        <a href="#de" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
+                        <a href="#ar" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
                     </div>
                 </div>
 
@@ -679,23 +712,23 @@
             </div>
             
             <nav id="mobile-menu" class="lg:hidden text-base">
-                <a href="#modules-en" data-section="modules" data-nav-key="navModules" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
-                <a href="#services-en" data-section="services" data-nav-key="navServices" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
-                <a href="#toolkit-en" data-section="toolkit" data-nav-key="navToolkit" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
-                <a href="#about-en" data-section="about" data-nav-key="navAbout" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
-                <a href="#contact-en" data-section="contact" data-nav-key="navContact" onclick="document.getElementById('menu-toggle').checked = false;" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
+                <a href="#modules-en" data-section="modules" data-nav-key="navModules" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
+                <a href="#services-en" data-section="services" data-nav-key="navServices" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
+                <a href="#toolkit-en" data-section="toolkit" data-nav-key="navToolkit" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
+                <a href="#about-en" data-section="about" data-nav-key="navAbout" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
+                <a href="#contact-en" data-section="contact" data-nav-key="navContact" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
             
                 <div class="mt-4 pt-4 border-t border-gray-700">
                     <p class="px-3 text-sm font-semibold text-gray-400 mb-2">Language</p>
-                    <a href="#en" onclick="switchLanguage('en');" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">English</a>
-                    <a href="#de" onclick="switchLanguage('de');" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Deutsch</a>
-                    <a href="#ar" onclick="switchLanguage('ar');" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">العربية</a>
+                    <a href="#en" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">English</a>
+                    <a href="#de" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Deutsch</a>
+                    <a href="#ar" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">العربية</a>
                 </div>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="relative">
             
             <div id="content-en" class="relative z-10">
