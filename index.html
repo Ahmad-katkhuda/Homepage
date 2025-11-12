@@ -242,6 +242,348 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
+    <script>
+    // --- DSGVO COOKIE CONSENT LOGIC ---
+    const COOKIE_CONSENT_KEY = 'dsgvo_cookie_consent';
+    const COOKIE_EXPIRY_DAYS = 365;
+
+    // Default language - match initial visible content
+    let currentLang = 'en';
+    
+    // Functions for multi-language display
+    const translations = {
+        en: {
+            title: 'Cookie Consent',
+            text: 'We use non-mandatory cookies to analyze traffic and improve user experience. You can choose to accept all, or only mandatory cookies.',
+            acceptAll: 'Accept All & Continue',
+            mandatoryOnly: 'Accept Mandatory Only',
+            imprint: 'Imprint',
+            privacy: 'Privacy Policy',
+            navModules: 'Modules',
+            navServices: 'Services',
+            navToolkit: 'Toolkit',
+            navAbout: 'About',
+            navContact: 'Contact'
+        },
+        de: {
+            title: 'Cookie-Zustimmung',
+            text: 'Wir verwenden nicht zwingend notwendige Cookies, um den Traffic zu analysieren und die Benutzererfahrung zu verbessern. Sie können alle Cookies oder nur die notwendigen Cookies akzeptieren.',
+            acceptAll: 'Alle Akzeptieren & Fortfahren',
+            mandatoryOnly: 'Nur Notwendige Akzeptieren',
+            imprint: 'Impressum',
+            privacy: 'Datenschutzerklärung',
+            navModules: 'Module',
+            navServices: 'Services',
+            navToolkit: 'Toolkit',
+            navAbout: 'Über mich',
+            navContact: 'Kontakt'
+        },
+        ar: {
+            title: 'الموافقة على ملفات تعريف الارتباط',
+            text: 'نستخدم ملفات تعريف الارتباط غير الإلزامية لتحليل حركة المرور وتحسين تجربة المستخدم. يمكنك اختيار قبول الجميع، أو ملفات تعريف الارتباط الإلزامية فقط.',
+            acceptAll: 'قبول الكل والمتابعة',
+            mandatoryOnly: 'قبول الإلزامي فقط',
+            imprint: 'بيانات الشركة',
+            privacy: 'سياسة الخصوصية',
+            navModules: 'الوحدات',
+            navServices: 'الخدمات',
+            navToolkit: 'الأدوات',
+            navAbout: 'عني',
+            navContact: 'اتصل'
+        }
+    };
+
+    function setCookie(name, value, days) {
+        try {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/; secure; samesite=Lax";
+            return true;
+        } catch (error) {
+            console.error('Error setting cookie:', error);
+            return false;
+        }
+    }
+
+    function getCookie(name) {
+        try {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        } catch (error) {
+            console.error('Error reading cookie:', error);
+            return null;
+        }
+    }
+    
+    function updateNavigationText(lang) {
+        try {
+            const t = translations[lang];
+            // Update desktop navigation
+            const navLinks = document.querySelectorAll('nav a[data-nav-key]');
+            navLinks.forEach(link => {
+                const key = link.getAttribute('data-nav-key');
+                if (t[key]) {
+                    link.textContent = t[key];
+                }
+            });
+            
+            // Update mobile navigation
+            const mobileNavLinks = document.querySelectorAll('#mobile-menu a[data-nav-key]');
+            mobileNavLinks.forEach(link => {
+                const key = link.getAttribute('data-nav-key');
+                if (t[key]) {
+                    link.textContent = t[key];
+                }
+            });
+        } catch (error) {
+            console.error('Error updating navigation text:', error);
+        }
+    }
+    
+    function updateModalText(lang) {
+        try {
+            const t = translations[lang];
+            document.getElementById('cookie-title').textContent = t.title;
+            document.getElementById('cookie-text').textContent = t.text;
+            document.getElementById('btn-accept-all').textContent = t.acceptAll;
+            document.getElementById('btn-mandatory-only').textContent = t.mandatoryOnly;
+            
+            // Update Footer Links
+            document.getElementById('footer-imprint-link').textContent = t.imprint;
+            document.getElementById('footer-privacy-link').textContent = t.privacy;
+            
+            // Update navigation text
+            updateNavigationText(lang);
+        } catch (error) {
+            console.error('Error updating modal text:', error);
+        }
+    }
+
+    function switchLanguage(lang) {
+        try {
+            // Validate language
+            if (!['en', 'de', 'ar'].includes(lang)) {
+                console.warn('Invalid language:', lang);
+                lang = 'en';
+            }
+
+            // Hide all content blocks
+            const contentBlocks = ['en', 'de', 'ar'];
+            contentBlocks.forEach(l => {
+                const element = document.getElementById(`content-${l}`);
+                if (element) {
+                    element.classList.add('hidden');
+                } else {
+                    console.warn('Content block not found:', `content-${l}`);
+                }
+            });
+
+            // Show selected content block
+            const selectedContent = document.getElementById(`content-${lang}`);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+            } else {
+                console.error('Selected content block not found:', `content-${lang}`);
+                // Fallback to English
+                const fallbackContent = document.getElementById('content-en');
+                if (fallbackContent) {
+                    fallbackContent.classList.remove('hidden');
+                    lang = 'en';
+                }
+            }
+
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+
+            // Set body direction and alignment based on language
+            const body = document.body;
+            if (lang === 'ar') {
+                body.classList.add('rtl');
+                body.classList.remove('ltr');
+            } else {
+                body.classList.remove('rtl');
+                body.classList.add('ltr');
+            }
+            currentLang = lang;
+            
+            // Update all legal/static text elements
+            updateModalText(lang);
+            
+            // Update navigation links to point to current language sections
+            updateNavigationLinks(lang);
+            
+            // Close mobile menu if open
+            const menuToggle = document.getElementById('menu-toggle');
+            if (menuToggle && menuToggle.checked) {
+                menuToggle.checked = false;
+            }
+            
+            // Update the display for the desktop language switcher
+            const currentLangDisplay = document.getElementById('current-lang-display');
+            if (currentLangDisplay) {
+                currentLangDisplay.textContent = lang.toUpperCase();
+            }
+            
+            // Update the URL hash without scrolling
+            history.replaceState(undefined, undefined, `#${lang}`);
+            
+            // Initialize Lucide icons after content change
+            initializeIcons();
+            
+        } catch (error) {
+            console.error('Error switching language:', error);
+        }
+    }
+
+    function updateNavigationLinks(lang) {
+        try {
+            // Update all navigation links to point to current language sections
+            const navLinks = document.querySelectorAll('a[data-section]');
+            navLinks.forEach(link => {
+                const section = link.getAttribute('data-section');
+                link.href = `#${section}-${lang}`;
+            });
+            
+            // Update logo link
+            const logoLink = document.querySelector('a[data-logo-link]');
+            if (logoLink) {
+                logoLink.href = `#hero-${lang}`;
+            }
+        } catch (error) {
+            console.error('Error updating navigation links:', error);
+        }
+    }
+
+    function initializeIcons() {
+        // Initialize Lucide icons with error handling
+        if (typeof lucide !== 'undefined') {
+            try {
+                lucide.createIcons();
+            } catch (iconError) {
+                console.warn('Error initializing Lucide icons:', iconError);
+                // Retry after a short delay
+                setTimeout(() => {
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
+                    }
+                }, 100);
+            }
+        } else {
+            // Lucide not loaded yet, wait and retry
+            setTimeout(initializeIcons, 50);
+        }
+    }
+
+    function handleConsent(status) {
+        try {
+            // Status can be 'accepted' or 'mandatory'
+            if (setCookie(COOKIE_CONSENT_KEY, status, COOKIE_EXPIRY_DAYS)) {
+                document.getElementById('cookie-modal-overlay').classList.remove('show');
+                
+                if (status === 'accepted') {
+                    loadNonMandatoryScripts();
+                }
+            } else {
+                console.error('Failed to set cookie consent');
+            }
+        } catch (error) {
+            console.error('Error handling consent:', error);
+        }
+    }
+    
+    // Placeholder for non-mandatory scripts (like analytics)
+    function loadNonMandatoryScripts() {
+        try {
+            console.log("Non-mandatory cookies/scripts (e.g., Google Analytics) loaded.");
+            // In a real application, you would dynamically load your analytics scripts here
+            // e.g. inject <script src="analytics.js"></script>
+        } catch (error) {
+            console.error('Error loading non-mandatory scripts:', error);
+        }
+    }
+
+    function checkConsent() {
+        try {
+            const consent = getCookie(COOKIE_CONSENT_KEY);
+            if (!consent) {
+                // Show the modal/pop-up
+                document.getElementById('cookie-modal-overlay').classList.add('show');
+            } else if (consent === 'accepted') {
+                // Load non-mandatory scripts if already accepted
+                loadNonMandatoryScripts();
+            } else {
+                // Only mandatory scripts are running (the core HTML/CSS/JS)
+                console.log("Consent found: Mandatory only. Non-mandatory scripts blocked.");
+            }
+        } catch (error) {
+            console.error('Error checking consent:', error);
+        }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+        try {
+            // Set initial cookie modal text to English (matching initial content)
+            updateModalText('en');
+            
+            // Check URL hash for language preference, otherwise default to 'en'
+            const hash = window.location.hash.substring(1);
+            if (['en', 'de', 'ar'].includes(hash)) {
+                switchLanguage(hash);
+            } else {
+                // Default to English to match initial visible content
+                switchLanguage('en'); 
+            }
+            
+            // Run cookie check after language is set
+            checkConsent();
+
+            // Scroll to Top Logic
+            const scrollToTopBtn = document.getElementById('scroll-to-top');
+            if (scrollToTopBtn) {
+                window.onscroll = function() {
+                    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                        scrollToTopBtn.style.opacity = "1";
+                        scrollToTopBtn.style.transform = "translateY(0)";
+                    } else {
+                        scrollToTopBtn.style.opacity = "0";
+                        scrollToTopBtn.style.transform = "translateY(10px)";
+                    }
+                };
+                scrollToTopBtn.onclick = function() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+            }
+            
+            // Initialize icons after everything is loaded
+            setTimeout(initializeIcons, 100);
+            
+        } catch (error) {
+            console.error('Error during initialization:', error);
+        }
+    });
+
+    // Keyboard navigation for dropdowns
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // Close dropdowns on escape
+            document.querySelectorAll('.dropdown-content, .footer-dropdown-content').forEach(dropdown => {
+                dropdown.style.opacity = '0';
+                dropdown.style.pointerEvents = 'none';
+            });
+        }
+    });
+</script>
 <body class="text-gray-900">
     
     <header class="header-bg text-white shadow-lg sticky top-0 z-20">
@@ -892,348 +1234,5 @@
             </p>
         </div>
     </div>
-    <script>
-        // --- DSGVO COOKIE CONSENT LOGIC ---
-        const COOKIE_CONSENT_KEY = 'dsgvo_cookie_consent';
-        const COOKIE_EXPIRY_DAYS = 365;
-
-        // Default language - match initial visible content
-        let currentLang = 'en';
-        
-        // Functions for multi-language display
-        const translations = {
-            en: {
-                title: 'Cookie Consent',
-                text: 'We use non-mandatory cookies to analyze traffic and improve user experience. You can choose to accept all, or only mandatory cookies.',
-                acceptAll: 'Accept All & Continue',
-                mandatoryOnly: 'Accept Mandatory Only',
-                imprint: 'Imprint',
-                privacy: 'Privacy Policy',
-                navModules: 'Modules',
-                navServices: 'Services',
-                navToolkit: 'Toolkit',
-                navAbout: 'About',
-                navContact: 'Contact'
-            },
-            de: {
-                title: 'Cookie-Zustimmung',
-                text: 'Wir verwenden nicht zwingend notwendige Cookies, um den Traffic zu analysieren und die Benutzererfahrung zu verbessern. Sie können alle Cookies oder nur die notwendigen Cookies akzeptieren.',
-                acceptAll: 'Alle Akzeptieren & Fortfahren',
-                mandatoryOnly: 'Nur Notwendige Akzeptieren',
-                imprint: 'Impressum',
-                privacy: 'Datenschutzerklärung',
-                navModules: 'Module',
-                navServices: 'Services',
-                navToolkit: 'Toolkit',
-                navAbout: 'Über mich',
-                navContact: 'Kontakt'
-            },
-            ar: {
-                title: 'الموافقة على ملفات تعريف الارتباط',
-                text: 'نستخدم ملفات تعريف الارتباط غير الإلزامية لتحليل حركة المرور وتحسين تجربة المستخدم. يمكنك اختيار قبول الجميع، أو ملفات تعريف الارتباط الإلزامية فقط.',
-                acceptAll: 'قبول الكل والمتابعة',
-                mandatoryOnly: 'قبول الإلزامي فقط',
-                imprint: 'بيانات الشركة',
-                privacy: 'سياسة الخصوصية',
-                navModules: 'الوحدات',
-                navServices: 'الخدمات',
-                navToolkit: 'الأدوات',
-                navAbout: 'عني',
-                navContact: 'اتصل'
-            }
-        };
-
-        function setCookie(name, value, days) {
-            try {
-                let expires = "";
-                if (days) {
-                    const date = new Date();
-                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                    expires = "; expires=" + date.toUTCString();
-                }
-                document.cookie = name + "=" + (value || "") + expires + "; path=/; secure; samesite=Lax";
-                return true;
-            } catch (error) {
-                console.error('Error setting cookie:', error);
-                return false;
-            }
-        }
-
-        function getCookie(name) {
-            try {
-                const nameEQ = name + "=";
-                const ca = document.cookie.split(';');
-                for(let i = 0; i < ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-                }
-                return null;
-            } catch (error) {
-                console.error('Error reading cookie:', error);
-                return null;
-            }
-        }
-        
-        function updateNavigationText(lang) {
-            try {
-                const t = translations[lang];
-                // Update desktop navigation
-                const navLinks = document.querySelectorAll('nav a[data-nav-key]');
-                navLinks.forEach(link => {
-                    const key = link.getAttribute('data-nav-key');
-                    if (t[key]) {
-                        link.textContent = t[key];
-                    }
-                });
-                
-                // Update mobile navigation
-                const mobileNavLinks = document.querySelectorAll('#mobile-menu a[data-nav-key]');
-                mobileNavLinks.forEach(link => {
-                    const key = link.getAttribute('data-nav-key');
-                    if (t[key]) {
-                        link.textContent = t[key];
-                    }
-                });
-            } catch (error) {
-                console.error('Error updating navigation text:', error);
-            }
-        }
-        
-        function updateModalText(lang) {
-            try {
-                const t = translations[lang];
-                document.getElementById('cookie-title').textContent = t.title;
-                document.getElementById('cookie-text').textContent = t.text;
-                document.getElementById('btn-accept-all').textContent = t.acceptAll;
-                document.getElementById('btn-mandatory-only').textContent = t.mandatoryOnly;
-                
-                // Update Footer Links
-                document.getElementById('footer-imprint-link').textContent = t.imprint;
-                document.getElementById('footer-privacy-link').textContent = t.privacy;
-                
-                // Update navigation text
-                updateNavigationText(lang);
-            } catch (error) {
-                console.error('Error updating modal text:', error);
-            }
-        }
-
-        // 4. Language Versions: Function to switch content blocks
-        function switchLanguage(lang) {
-            try {
-                // Validate language
-                if (!['en', 'de', 'ar'].includes(lang)) {
-                    console.warn('Invalid language:', lang);
-                    lang = 'en';
-                }
-
-                // Hide all content blocks
-                const contentBlocks = ['en', 'de', 'ar'];
-                contentBlocks.forEach(l => {
-                    const element = document.getElementById(`content-${l}`);
-                    if (element) {
-                        element.classList.add('hidden');
-                    } else {
-                        console.warn('Content block not found:', `content-${l}`);
-                    }
-                });
-
-                // Show selected content block
-                const selectedContent = document.getElementById(`content-${lang}`);
-                if (selectedContent) {
-                    selectedContent.classList.remove('hidden');
-                } else {
-                    console.error('Selected content block not found:', `content-${lang}`);
-                    // Fallback to English
-                    const fallbackContent = document.getElementById('content-en');
-                    if (fallbackContent) {
-                        fallbackContent.classList.remove('hidden');
-                        lang = 'en';
-                    }
-                }
-
-                // Update HTML lang attribute
-                document.documentElement.lang = lang;
-
-                // Set body direction and alignment based on language
-                const body = document.body;
-                if (lang === 'ar') {
-                    body.classList.add('rtl');
-                    body.classList.remove('ltr');
-                } else {
-                    body.classList.remove('rtl');
-                    body.classList.add('ltr');
-                }
-                currentLang = lang;
-                
-                // Update all legal/static text elements
-                updateModalText(lang);
-                
-                // Update navigation links to point to current language sections
-                updateNavigationLinks(lang);
-                
-                // Close mobile menu if open
-                const menuToggle = document.getElementById('menu-toggle');
-                if (menuToggle && menuToggle.checked) {
-                    menuToggle.checked = false;
-                }
-                
-                // Update the display for the desktop language switcher
-                const currentLangDisplay = document.getElementById('current-lang-display');
-                if (currentLangDisplay) {
-                    currentLangDisplay.textContent = lang.toUpperCase();
-                }
-                
-                // Update the URL hash without scrolling
-                history.replaceState(undefined, undefined, `#${lang}`);
-                
-                // Initialize Lucide icons after content change
-                initializeIcons();
-                
-            } catch (error) {
-                console.error('Error switching language:', error);
-            }
-        }
-
-        function updateNavigationLinks(lang) {
-            try {
-                // Update all navigation links to point to current language sections
-                const navLinks = document.querySelectorAll('a[data-section]');
-                navLinks.forEach(link => {
-                    const section = link.getAttribute('data-section');
-                    link.href = `#${section}-${lang}`;
-                });
-                
-                // Update logo link
-                const logoLink = document.querySelector('a[data-logo-link]');
-                if (logoLink) {
-                    logoLink.href = `#hero-${lang}`;
-                }
-            } catch (error) {
-                console.error('Error updating navigation links:', error);
-            }
-        }
-
-        function initializeIcons() {
-            // Initialize Lucide icons with error handling
-            if (typeof lucide !== 'undefined') {
-                try {
-                    lucide.createIcons();
-                } catch (iconError) {
-                    console.warn('Error initializing Lucide icons:', iconError);
-                    // Retry after a short delay
-                    setTimeout(() => {
-                        if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                            lucide.createIcons();
-                        }
-                    }, 100);
-                }
-            } else {
-                // Lucide not loaded yet, wait and retry
-                setTimeout(initializeIcons, 50);
-            }
-        }
-
-        function handleConsent(status) {
-            try {
-                // Status can be 'accepted' or 'mandatory'
-                if (setCookie(COOKIE_CONSENT_KEY, status, COOKIE_EXPIRY_DAYS)) {
-                    document.getElementById('cookie-modal-overlay').classList.remove('show');
-                    
-                    if (status === 'accepted') {
-                        loadNonMandatoryScripts();
-                    }
-                } else {
-                    console.error('Failed to set cookie consent');
-                }
-            } catch (error) {
-                console.error('Error handling consent:', error);
-            }
-        }
-        
-        // Placeholder for non-mandatory scripts (like analytics)
-        function loadNonMandatoryScripts() {
-            try {
-                console.log("Non-mandatory cookies/scripts (e.g., Google Analytics) loaded.");
-                // In a real application, you would dynamically load your analytics scripts here
-                // e.g. inject <script src="analytics.js"></script>
-            } catch (error) {
-                console.error('Error loading non-mandatory scripts:', error);
-            }
-        }
-
-        function checkConsent() {
-            try {
-                const consent = getCookie(COOKIE_CONSENT_KEY);
-                if (!consent) {
-                    // Show the modal/pop-up
-                    document.getElementById('cookie-modal-overlay').classList.add('show');
-                } else if (consent === 'accepted') {
-                    // Load non-mandatory scripts if already accepted
-                    loadNonMandatoryScripts();
-                } else {
-                    // Only mandatory scripts are running (the core HTML/CSS/JS)
-                    console.log("Consent found: Mandatory only. Non-mandatory scripts blocked.");
-                }
-            } catch (error) {
-                console.error('Error checking consent:', error);
-            }
-        }
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                // Set initial cookie modal text to English (matching initial content)
-                updateModalText('en');
-                
-                // Check URL hash for language preference, otherwise default to 'en'
-                const hash = window.location.hash.substring(1);
-                if (['en', 'de', 'ar'].includes(hash)) {
-                    switchLanguage(hash);
-                } else {
-                    // Default to English to match initial visible content
-                    switchLanguage('en'); 
-                }
-                
-                // Run cookie check after language is set
-                checkConsent();
-
-                // Scroll to Top Logic
-                const scrollToTopBtn = document.getElementById('scroll-to-top');
-                if (scrollToTopBtn) {
-                    window.onscroll = function() {
-                        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                            scrollToTopBtn.style.opacity = "1";
-                            scrollToTopBtn.style.transform = "translateY(0)";
-                        } else {
-                            scrollToTopBtn.style.opacity = "0";
-                            scrollToTopBtn.style.transform = "translateY(10px)";
-                        }
-                    };
-                    scrollToTopBtn.onclick = function() {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    };
-                }
-                
-                // Initialize icons after everything is loaded
-                setTimeout(initializeIcons, 100);
-                
-            } catch (error) {
-                console.error('Error during initialization:', error);
-            }
-        });
-
-        // Keyboard navigation for dropdowns
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                // Close dropdowns on escape
-                document.querySelectorAll('.dropdown-content, .footer-dropdown-content').forEach(dropdown => {
-                    dropdown.style.opacity = '0';
-                    dropdown.style.pointerEvents = 'none';
-                });
-            }
-        });
-    </script>
 </body>
 </html>
