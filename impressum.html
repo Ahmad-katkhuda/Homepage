@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressum & Datenschutzerklärung</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark: #1D1D1F; 
+            --color-accent: #009B77;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-dark);
+            background-color: #f5f5f7;
+            scroll-behavior: smooth;
+        }
+        /* Better scroll offset solution */
+        .section-anchor {
+            display: block;
+            position: relative;
+            top: -80px;
+            visibility: hidden;
+        }
+        .header-bg {
+            background-color: var(--color-dark);
+        }
+        .dynamic-accent {
+            color: var(--color-accent);
+        }
+        /* Ensure content starts below fixed header */
+        main {
+            padding-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Simple Navigation -->
+    <header class="header-bg text-white shadow-lg sticky top-0 z-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-semibold">Rechtliche Hinweise</h1>
+            <a href="index.html" class="text-white hover:text-gray-400 dynamic-accent transition duration-150 flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                <span>Zurück zur Startseite</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- 1. Impressum Section -->
+        <span class="section-anchor" id="imprint"></span>
+        <section class="bg-white p-8 rounded-xl shadow-lg mb-12">
+            <h2 class="text-3xl font-bold mb-6 border-b pb-2 dynamic-accent">Impressum (Angaben gemäß § 5 TMG)</h2>
+            
+            <div class="space-y-4">
+                <!-- Your imprint content remains the same -->
+                <h3 class="text-xl font-semibold mt-6">Dienstanbieter</h3>
+                <p>
+                    Ahmad Katkhuda<br>
+                    [Vollständige Adresse des Unternehmens/Freiberuflers einfügen]<br>
+                    Hamburg, Deutschland
+                </p>
+
+                <h3 class="text-xl font-semibold mt-6">Kontakt</h3>
+                <p>
+                    Telefon: [Ihre Telefonnummer]<br>
+                    E-Mail: [Ihre E-Mail-Adresse]<br>
+                    Web: <a href="index.html" class="underline hover:text-gray-600">www.ahmadkatkhuda.com</a>
+                </p>
+
+                <h3 class="text-xl font-semibold mt-6">Berufsbezeichnung</h3>
+                <p>
+                    Freiberuflicher Technischer Berater (Dynamics 365 SCM)<br>
+                    Umsatzsteuer-Identifikationsnummer (optional, falls vorhanden): [Ihre USt-ID oder Hinweis zur Kleinunternehmerregelung]
+                </p>
+                
+                <h3 class="text-xl font-semibold mt-6">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
+                <p>
+                    Ahmad Katkhuda<br>
+                    [Vollständige Adresse]
+                </p>
+            </div>
+            <p class="mt-8 text-sm text-gray-500 border-t pt-4">
+                Hinweis: Bitte ersetzen Sie die Platzhalter in Klammern durch Ihre tatsächlichen und vollständigen Kontaktdaten und rechtlichen Informationen.
+            </p>
+        </section>
+
+        <!-- 2. Datenschutzerklärung Section -->
+        <span class="section-anchor" id="privacy"></span>
+        <section class="bg-white p-8 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-6 border-b pb-2 dynamic-accent">Datenschutzerklärung</h2>
+            
+            <div class="space-y-6 text-gray-700">
+                <!-- Your privacy content remains the same -->
+                <h3 class="text-2xl font-semibold mt-6">1. Datenschutz auf einen Blick</h3>
+                <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
+                
+                <!-- ... rest of your privacy content ... -->
+            </div>
+            <p class="mt-8 text-sm text-gray-500 border-t pt-4">
+                Dieser Text ist eine generische Vorlage. Bitte konsultieren Sie einen Rechtsbeistand, um eine auf Ihre spezifische Website zugeschnittene, rechtskonforme Datenschutzerklärung zu gewährleisten.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="header-bg text-white py-4 mt-12">
+        <div class="max-w-4xl mx-auto px-4 text-center text-sm text-gray-400">
+            © 2025 Ahmad Katkhuda. Alle Rechte vorbehalten. | <a href="#imprint" class="hover:underline">Impressum</a> | <a href="#privacy" class="hover:underline">Datenschutzerklärung</a>
+        </div>
+    </footer>
+
+</body>
+</html>
