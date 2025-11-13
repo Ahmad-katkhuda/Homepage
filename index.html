@@ -302,6 +302,8 @@
     function handleLanguageSwitch(e, lang) {
         e.preventDefault();
         switchLanguage(lang);
+        closeLanguageDropdown();
+        closeFooterLanguageDropdown();
         return false;
     }
 
@@ -366,6 +368,44 @@
         } catch (error) {
             console.error('Error reading cookie:', error);
             return null;
+        }
+    }
+
+    function closeLanguageDropdown() {
+        try {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                dropdown.style.opacity = '0';
+                dropdown.style.pointerEvents = 'none';
+            });
+        } catch (error) {
+            console.error('Error closing language dropdown:', error);
+        }
+    }
+
+    function closeFooterLanguageDropdown() {
+        try {
+            const dropdowns = document.querySelectorAll('.footer-dropdown-content');
+            dropdowns.forEach(dropdown => {
+                dropdown.style.opacity = '0';
+                dropdown.style.pointerEvents = 'none';
+            });
+        } catch (error) {
+            console.error('Error closing footer language dropdown:', error);
+        }
+    }
+
+    function closeMobileMenu() {
+        try {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuToggle && mobileMenu) {
+                menuToggle.checked = false;
+                mobileMenu.style.maxHeight = '0';
+            }
+        } catch (error) {
+            console.error('Error closing mobile menu:', error);
         }
     }
 
@@ -695,9 +735,9 @@
                         <span class="ml-1 text-sm font-medium uppercase" id="current-lang-display">EN</span>
                     </button>
                     <div class="absolute right-0 top-full mt-0 w-32 bg-white rounded-lg shadow-xl dropdown-content origin-top" role="menu">
-                        <a href="#en" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
-                        <a href="#de" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
-                        <a href="#ar" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
+                        <a href="#en" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem" onclick="closeLanguageDropdown()">English</a>
+                        <a href="#de" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem" onclick="closeLanguageDropdown()">Deutsch</a>
+                        <a href="#ar" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem" onclick="closeLanguageDropdown()">العربية</a>
                     </div>
                 </div>
 
@@ -712,11 +752,11 @@
             </div>
             
             <nav id="mobile-menu" class="lg:hidden text-base">
-                <a href="#modules-en" data-section="modules" data-nav-key="navModules" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Modules</a>
-                <a href="#services-en" data-section="services" data-nav-key="navServices" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Services</a>
-                <a href="#toolkit-en" data-section="toolkit" data-nav-key="navToolkit" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Toolkit</a>
-                <a href="#about-en" data-section="about" data-nav-key="navAbout" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">About</a>
-                <a href="#contact-en" data-section="contact" data-nav-key="navContact" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150">Contact</a>
+                <a href="#modules-en" data-section="modules" data-nav-key="navModules" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150" onclick="closeMobileMenu()">Modules</a>
+                <a href="#services-en" data-section="services" data-nav-key="navServices" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150" onclick="closeMobileMenu()">Services</a>
+                <a href="#toolkit-en" data-section="toolkit" data-nav-key="navToolkit" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150" onclick="closeMobileMenu()">Toolkit</a>
+                <a href="#about-en" data-section="about" data-nav-key="navAbout" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150" onclick="closeMobileMenu()">About</a>
+                <a href="#contact-en" data-section="contact" data-nav-key="navContact" class="block px-3 py-2 rounded-md hover:bg-gray-700 transition duration-150" onclick="closeMobileMenu()">Contact</a>
             </nav>
         </div>
     </header>
@@ -1232,9 +1272,9 @@
                     <span class="ml-2 text-sm font-medium">Language</span>
                 </button>
                 <div class="absolute bottom-full right-0 mb-0 w-32 bg-white rounded-lg shadow-xl footer-dropdown-content origin-bottom" role="menu">
-                    <a href="#en" onclick="switchLanguage('en'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
-                    <a href="#de" onclick="switchLanguage('de'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
-                    <a href="#ar" onclick="switchLanguage('ar'); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
+                    <a href="#en" onclick="switchLanguage('en'); closeFooterLanguageDropdown(); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">English</a>
+                    <a href="#de" onclick="switchLanguage('de'); closeFooterLanguageDropdown(); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">Deutsch</a>
+                    <a href="#ar" onclick="switchLanguage('ar'); closeFooterLanguageDropdown(); return false;" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150" role="menuitem">العربية</a>
                 </div>
             </div>
         </div>
