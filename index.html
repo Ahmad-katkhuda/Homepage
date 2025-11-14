@@ -474,6 +474,10 @@
             currentLang = lang;
             updateModalText(lang);
             updateNavigationLinks(lang);
+            
+            // RE-ATTACH LANGUAGE EVENT LISTENERS AFTER SWITCHING
+            reattachLanguageListeners();
+            
             const menuToggle = document.getElementById('menu-toggle');
             if (menuToggle && menuToggle.checked) menuToggle.checked = false;
             const currentLangDisplay = document.getElementById('current-lang-display');
@@ -497,6 +501,20 @@
         } catch (error) {
             console.error('Error updating navigation links:', error);
         }
+    }
+        
+    function reattachLanguageListeners() {
+        // Remove existing listeners first to prevent duplicates
+        const allLangLinks = document.querySelectorAll('a[href="#en"], a[href="#de"], a[href="#ar"]');
+        allLangLinks.forEach(link => {
+            link.replaceWith(link.cloneNode(true));
+        });
+    
+        // Re-attach event listeners to all language links
+        const langLinks = document.querySelectorAll('a[href="#en"], a[href="#de"], a[href="#ar"]');
+        langLinks.forEach(link => {
+            link.addEventListener('click', handleLanguageClick);
+        });
     }
 
     function initializeIcons() {
@@ -570,23 +588,16 @@
             if (mandatoryOnlyBtn) {
                 mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
             }
-
-            // Language dropdown links
-            const langLinks = document.querySelectorAll('a[href="#en"], a[href="#de"], a[href="#ar"]');
-            langLinks.forEach(link => {
-                const lang = link.getAttribute('href').substring(1);
-                link.addEventListener('click', (e) => handleLanguageSwitch(e, lang));
-            });
-
+    
             // Mobile menu links
             const mobileMenuLinks = document.querySelectorAll('#mobile-menu a[data-section]');
             mobileMenuLinks.forEach(link => {
                 link.addEventListener('click', handleMobileMenuClick);
             });
-
+    
             // Mobile menu toggle
             handleMobileMenuToggle();
-
+    
             // Scroll to top button
             const scrollToTopBtn = document.getElementById('scroll-to-top');
             if (scrollToTopBtn) {
@@ -594,13 +605,22 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             }
-
+    
             console.log('All event listeners initialized successfully');
         } catch (error) {
             console.error('Error initializing event listeners:', error);
         }
     }
 
+    function handleLanguageClick(e) {
+        e.preventDefault();
+        const lang = this.getAttribute('href').substring(1);
+        if (['en', 'de', 'ar'].includes(lang)) {
+            switchLanguage(lang);
+            closeLanguageDropdown();
+            closeFooterLanguageDropdown();
+        }
+    }
     // --- MAIN INITIALIZATION ---
     function initializeEverything() {
         try {
@@ -616,9 +636,12 @@
             // Initialize all event listeners
             initializeEventListeners();
             
+            // Initialize language listeners specifically
+            reattachLanguageListeners();
+            
             // Check cookie consent
             checkConsent();
-
+    
             // Initialize icons with a slight delay to ensure DOM is ready
             setTimeout(initializeIcons, 200);
             
