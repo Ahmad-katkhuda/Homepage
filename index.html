@@ -455,6 +455,8 @@
             
             // Reinitialize icons
             initializeIcons();
+
+            document.activeElement.blur(); // Remove focus from the currently active element (the clicked button/link)
             
             console.log('Language switched to:', lang);
         } catch (error) {
