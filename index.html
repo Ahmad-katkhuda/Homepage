@@ -337,7 +337,6 @@
             dropdowns.forEach(dropdown => {
                 dropdown.style.opacity = '0';
                 dropdown.style.pointerEvents = 'none';
-                dropdown.style.marginTop = '-10px'; // Reset the margin
             });
         } catch (error) {
             console.error('Error closing language dropdown:', error);
@@ -350,7 +349,6 @@
             dropdowns.forEach(dropdown => {
                 dropdown.style.opacity = '0';
                 dropdown.style.pointerEvents = 'none';
-                dropdown.style.marginBottom = '-10px'; // Reset the margin
             });
         } catch (error) {
             console.error('Error closing footer language dropdown:', error);
@@ -404,7 +402,6 @@
         }
     }
     
- 
     function switchLanguage(lang) {
         try {
             if (!['en', 'de', 'ar'].includes(lang)) {
@@ -464,6 +461,20 @@
             console.log('Language switched to:', lang);
         } catch (error) {
             console.error('Error switching language:', error);
+        }
+    }
+    
+    function updateNavigationLinks(lang) {
+        try {
+            const navLinks = document.querySelectorAll('a[data-section]');
+            navLinks.forEach(link => {
+                const section = link.getAttribute('data-section');
+                link.href = `#${section}-${lang}`;
+            });
+            const logoLink = document.querySelector('a[data-logo-link]');
+            if (logoLink) logoLink.href = `#hero-${lang}`;
+        } catch (error) {
+            console.error('Error updating navigation links:', error);
         }
     }
     
@@ -578,21 +589,17 @@
                 mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
             }
     
-            // FIXED: Language links - improved event delegation
+            // Language links - use event delegation for better performance
             document.addEventListener('click', function(e) {
-                // Handle language dropdown links
                 const target = e.target.closest('a[href="#en"], a[href="#de"], a[href="#ar"]');
-                if (target && target.getAttribute('href')) {
+                if (target) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    
                     const lang = target.getAttribute('href').substring(1);
                     if (['en', 'de', 'ar'].includes(lang)) {
                         switchLanguage(lang);
                         closeLanguageDropdown();
                         closeFooterLanguageDropdown();
                     }
-                    return false;
                 }
             });
     
@@ -660,7 +667,7 @@
     }
     
     // Start everything when DOM is loaded
-    ('DOMContentLoaded', initializeEverything);
+    document.addEventListener('DOMContentLoaded', initializeEverything);
     
     // Keyboard navigation for dropdowns
     document.addEventListener('keydown', function(e) {
