@@ -411,6 +411,10 @@
                 lang = 'en';
             }
             
+            // Close dropdowns first
+            closeLanguageDropdown();
+            closeFooterLanguageDropdown();
+            
             // Hide all content sections
             ['en', 'de', 'ar'].forEach(l => {
                 const element = document.getElementById(`content-${l}`);
@@ -457,12 +461,58 @@
             
             // Reinitialize icons
             initializeIcons();
-
+    
             document.activeElement.blur(); // Remove focus from the currently active element (the clicked button/link)
             
             console.log('Language switched to:', lang);
         } catch (error) {
             console.error('Error switching language:', error);
+        }
+    }
+
+    function setupDropdownInteractions() {
+        // Handle header dropdown hover
+        const headerDropdown = document.querySelector('.language-dropdown');
+        if (headerDropdown) {
+            headerDropdown.addEventListener('mouseenter', function() {
+                const dropdownContent = this.querySelector('.dropdown-content');
+                if (dropdownContent) {
+                    dropdownContent.style.opacity = '1';
+                    dropdownContent.style.pointerEvents = 'auto';
+                    dropdownContent.style.marginTop = '0';
+                }
+            });
+            
+            headerDropdown.addEventListener('mouseleave', function() {
+                const dropdownContent = this.querySelector('.dropdown-content');
+                if (dropdownContent) {
+                    dropdownContent.style.opacity = '0';
+                    dropdownContent.style.pointerEvents = 'none';
+                    dropdownContent.style.marginTop = '-10px';
+                }
+            });
+        }
+    
+        // Handle footer dropdown hover
+        const footerDropdown = document.querySelector('.footer-language-dropdown');
+        if (footerDropdown) {
+            footerDropdown.addEventListener('mouseenter', function() {
+                const dropdownContent = this.querySelector('.footer-dropdown-content');
+                if (dropdownContent) {
+                    dropdownContent.style.opacity = '1';
+                    dropdownContent.style.pointerEvents = 'auto';
+                    dropdownContent.style.marginBottom = '0';
+                }
+            });
+            
+            footerDropdown.addEventListener('mouseleave', function() {
+                const dropdownContent = this.querySelector('.footer-dropdown-content');
+                if (dropdownContent) {
+                    dropdownContent.style.opacity = '0';
+                    dropdownContent.style.pointerEvents = 'none';
+                    dropdownContent.style.marginBottom = '-10px';
+                }
+            });
         }
     }
     
@@ -578,60 +628,83 @@
     
         // --- INITIALIZATION ---
         function initializeEventListeners() {
-        try {
-            // Cookie modal buttons
-            const acceptAllBtn = document.getElementById('btn-accept-all');
-            const mandatoryOnlyBtn = document.getElementById('btn-mandatory-only');
-            
-            if (acceptAllBtn) {
-                acceptAllBtn.addEventListener('click', handleCookieAccept);
-            }
-            if (mandatoryOnlyBtn) {
-                mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
-            }
-    
-            // FIXED: Language links - improved event delegation
-            document.addEventListener('click', function(e) {
-                // Handle language dropdown links
-                const target = e.target.closest('a[href="#en"], a[href="#de"], a[href="#ar"]');
-                if (target && target.getAttribute('href')) {
-                    e.preventDefault();
-                    e.stopPropagation();
+            try {
+                // Cookie modal buttons
+                const acceptAllBtn = document.getElementById('btn-accept-all');
+                const mandatoryOnlyBtn = document.getElementById('btn-mandatory-only');
+                
+                if (acceptAllBtn) {
+                    acceptAllBtn.addEventListener('click', handleCookieAccept);
+                }
+                if (mandatoryOnlyBtn) {
+                    mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
+                }
+        
+                // FIXED: Better language dropdown handling
+                function handleLanguageSelection(lang) {
+                    switchLanguage(lang);
+                    closeLanguageDropdown();
+                    closeFooterLanguageDropdown();
+                }
+        
+                // Use event delegation that works with dynamically shown/hidden content
+                document.addEventListener('click', function(e) {
+                    // Handle language dropdown links
+                    if (e.target.matches('a[href="#en"], a[href="#de"], a[href="#ar"]')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const lang = e.target.getAttribute('href').substring(1);
+                        if (['en', 'de', 'ar'].includes(lang)) {
+                            handleLanguageSelection(lang);
+                        }
+                        return false;
+                    }
                     
-                    const lang = target.getAttribute('href').substring(1);
-                    if (['en', 'de', 'ar'].includes(lang)) {
-                        switchLanguage(lang);
+                    // Also handle clicks on child elements inside language links
+                    const languageLink = e.target.closest('a[href="#en"], a[href="#de"], a[href="#ar"]');
+                    if (languageLink) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const lang = languageLink.getAttribute('href').substring(1);
+                        if (['en', 'de', 'ar'].includes(lang)) {
+                            handleLanguageSelection(lang);
+                        }
+                        return false;
+                    }
+        
+                    // Close dropdowns when clicking outside
+                    if (!e.target.closest('.language-dropdown') && !e.target.closest('.footer-language-dropdown')) {
                         closeLanguageDropdown();
                         closeFooterLanguageDropdown();
                     }
-                    return false;
-                }
-            });
-    
-            // Mobile menu links
-            const mobileMenuLinks = document.querySelectorAll('#mobile-menu a[data-section]');
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', handleMobileMenuClick);
-            });
-    
-            // Mobile menu toggle
-            handleMobileMenuToggle();
-    
-            // Scroll to top button
-            const scrollToTopBtn = document.getElementById('scroll-to-top');
-            if (scrollToTopBtn) {
-                scrollToTopBtn.addEventListener('click', function() {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
+        
+                // Mobile menu links
+                const mobileMenuLinks = document.querySelectorAll('#mobile-menu a[data-section]');
+                mobileMenuLinks.forEach(link => {
+                    link.addEventListener('click', handleMobileMenuClick);
+                });
+        
+                // Mobile menu toggle
+                handleMobileMenuToggle();
+        
+                // Scroll to top button
+                const scrollToTopBtn = document.getElementById('scroll-to-top');
+                if (scrollToTopBtn) {
+                    scrollToTopBtn.addEventListener('click', function() {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }
+        
+                console.log('All event listeners initialized successfully');
+            } catch (error) {
+                console.error('Error initializing event listeners:', error);
             }
-    
-            console.log('All event listeners initialized successfully');
-        } catch (error) {
-            console.error('Error initializing event listeners:', error);
         }
-    }
     
-    function initializeEverything() {
+        function initializeEverything() {
         try {
             // Initialize language and content first
             updateModalText('en');
@@ -644,6 +717,9 @@
             
             // Initialize all event listeners
             initializeEventListeners();
+            
+            // Setup dropdown interactions
+            setupDropdownInteractions();
             
             // Check cookie consent
             checkConsent();
