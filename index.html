@@ -337,6 +337,7 @@
             dropdowns.forEach(dropdown => {
                 dropdown.style.opacity = '0';
                 dropdown.style.pointerEvents = 'none';
+                dropdown.style.marginTop = '-10px'; // Reset the margin
             });
         } catch (error) {
             console.error('Error closing language dropdown:', error);
@@ -349,6 +350,7 @@
             dropdowns.forEach(dropdown => {
                 dropdown.style.opacity = '0';
                 dropdown.style.pointerEvents = 'none';
+                dropdown.style.marginBottom = '-10px'; // Reset the margin
             });
         } catch (error) {
             console.error('Error closing footer language dropdown:', error);
@@ -574,9 +576,8 @@
         }
     }
     
-    // --- INITIALIZATION ---
-    
-    function initializeEventListeners() {
+        // --- INITIALIZATION ---
+        function initializeEventListeners() {
         try {
             // Cookie modal buttons
             const acceptAllBtn = document.getElementById('btn-accept-all');
@@ -589,17 +590,21 @@
                 mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
             }
     
-            // Language links - use event delegation for better performance
+            // FIXED: Language links - improved event delegation
             document.addEventListener('click', function(e) {
+                // Handle language dropdown links
                 const target = e.target.closest('a[href="#en"], a[href="#de"], a[href="#ar"]');
-                if (target) {
+                if (target && target.getAttribute('href')) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    
                     const lang = target.getAttribute('href').substring(1);
                     if (['en', 'de', 'ar'].includes(lang)) {
                         switchLanguage(lang);
                         closeLanguageDropdown();
                         closeFooterLanguageDropdown();
                     }
+                    return false;
                 }
             });
     
