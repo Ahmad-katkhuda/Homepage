@@ -337,6 +337,7 @@
             dropdowns.forEach(dropdown => {
                 dropdown.style.opacity = '0';
                 dropdown.style.pointerEvents = 'none';
+                dropdown.style.marginTop = '-10px'; // Reset the margin
             });
         } catch (error) {
             console.error('Error closing language dropdown:', error);
@@ -349,6 +350,7 @@
             dropdowns.forEach(dropdown => {
                 dropdown.style.opacity = '0';
                 dropdown.style.pointerEvents = 'none';
+                dropdown.style.marginBottom = '-10px'; // Reset the margin
             });
         } catch (error) {
             console.error('Error closing footer language dropdown:', error);
@@ -402,9 +404,42 @@
         }
     }
     
+ 
     function switchLanguage(lang) {
         try {
-            // ... (existing logic to hide/show content, update language attributes) ...
+            if (!['en', 'de', 'ar'].includes(lang)) {
+                console.warn('Invalid language:', lang);
+                lang = 'en';
+            }
+            
+            // Hide all content sections
+            ['en', 'de', 'ar'].forEach(l => {
+                const element = document.getElementById(`content-${l}`);
+                if (element) element.classList.add('hidden');
+            });
+            
+            // Show selected content
+            const selectedContent = document.getElementById(`content-${lang}`);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+            } else {
+                const fallbackContent = document.getElementById('content-en');
+                if (fallbackContent) {
+                    fallbackContent.classList.remove('hidden');
+                    lang = 'en';
+                }
+            }
+            
+            // Update document and body
+            document.documentElement.lang = lang;
+            const body = document.body;
+            if (lang === 'ar') {
+                body.classList.add('rtl');
+                body.classList.remove('ltr');
+            } else {
+                body.classList.remove('rtl');
+                body.classList.add('ltr');
+            }
             
             currentLang = lang;
             updateModalText(lang);
@@ -421,31 +456,14 @@
             // Update URL hash
             history.replaceState(undefined, undefined, `#${lang}`);
             
-            // >> ADD THIS CRITICAL LINE TO CLEAR FOCUS <<
-            if (document.activeElement && document.activeElement.blur) {
-                 document.activeElement.blur();
-            }
-            
             // Reinitialize icons
             initializeIcons();
+
+            document.activeElement.blur(); // Remove focus from the currently active element (the clicked button/link)
             
             console.log('Language switched to:', lang);
         } catch (error) {
             console.error('Error switching language:', error);
-        }
-    }
-    
-    function updateNavigationLinks(lang) {
-        try {
-            const navLinks = document.querySelectorAll('a[data-section]');
-            navLinks.forEach(link => {
-                const section = link.getAttribute('data-section');
-                link.href = `#${section}-${lang}`;
-            });
-            const logoLink = document.querySelector('a[data-logo-link]');
-            if (logoLink) logoLink.href = `#hero-${lang}`;
-        } catch (error) {
-            console.error('Error updating navigation links:', error);
         }
     }
     
@@ -560,17 +578,21 @@
                 mandatoryOnlyBtn.addEventListener('click', handleCookieMandatory);
             }
     
-            // Language links - use event delegation for better performance
-            ('click', function(e) {
+            // FIXED: Language links - improved event delegation
+            document.addEventListener('click', function(e) {
+                // Handle language dropdown links
                 const target = e.target.closest('a[href="#en"], a[href="#de"], a[href="#ar"]');
-                if (target) {
+                if (target && target.getAttribute('href')) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    
                     const lang = target.getAttribute('href').substring(1);
                     if (['en', 'de', 'ar'].includes(lang)) {
                         switchLanguage(lang);
                         closeLanguageDropdown();
                         closeFooterLanguageDropdown();
                     }
+                    return false;
                 }
             });
     
