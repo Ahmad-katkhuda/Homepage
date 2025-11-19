@@ -404,39 +404,7 @@
     
     function switchLanguage(lang) {
         try {
-            if (!['en', 'de', 'ar'].includes(lang)) {
-                console.warn('Invalid language:', lang);
-                lang = 'en';
-            }
-            
-            // Hide all content sections
-            ['en', 'de', 'ar'].forEach(l => {
-                const element = document.getElementById(`content-${l}`);
-                if (element) element.classList.add('hidden');
-            });
-            
-            // Show selected content
-            const selectedContent = document.getElementById(`content-${lang}`);
-            if (selectedContent) {
-                selectedContent.classList.remove('hidden');
-            } else {
-                const fallbackContent = document.getElementById('content-en');
-                if (fallbackContent) {
-                    fallbackContent.classList.remove('hidden');
-                    lang = 'en';
-                }
-            }
-            
-            // Update document and body
-            document.documentElement.lang = lang;
-            const body = document.body;
-            if (lang === 'ar') {
-                body.classList.add('rtl');
-                body.classList.remove('ltr');
-            } else {
-                body.classList.remove('rtl');
-                body.classList.add('ltr');
-            }
+            // ... (existing logic to hide/show content, update language attributes) ...
             
             currentLang = lang;
             updateModalText(lang);
@@ -453,10 +421,13 @@
             // Update URL hash
             history.replaceState(undefined, undefined, `#${lang}`);
             
+            // >> ADD THIS CRITICAL LINE TO CLEAR FOCUS <<
+            if (document.activeElement && document.activeElement.blur) {
+                 document.activeElement.blur();
+            }
+            
             // Reinitialize icons
             initializeIcons();
-
-            document.activeElement.blur(); // Remove focus from the currently active element (the clicked button/link)
             
             console.log('Language switched to:', lang);
         } catch (error) {
@@ -590,7 +561,7 @@
             }
     
             // Language links - use event delegation for better performance
-            document.addEventListener('click', function(e) {
+            ('click', function(e) {
                 const target = e.target.closest('a[href="#en"], a[href="#de"], a[href="#ar"]');
                 if (target) {
                     e.preventDefault();
@@ -667,7 +638,7 @@
     }
     
     // Start everything when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initializeEverything);
+    ('DOMContentLoaded', initializeEverything);
     
     // Keyboard navigation for dropdowns
     document.addEventListener('keydown', function(e) {
