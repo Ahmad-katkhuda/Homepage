@@ -35,6 +35,13 @@
         main {
             padding-top: 2rem;
         }
+        .no-cookies-banner {
+            background-color: #f0f9f4;
+            border: 1px solid #009B77;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -52,17 +59,31 @@
 
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
+        <!-- Clear No-Cookies Notice -->
+        <div class="no-cookies-banner text-center">
+            <div class="flex justify-center mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#009B77" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    <path d="m9 12 2 2 4-4"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Keine Cookies – Ihre Privatsphäre ist geschützt</h2>
+            <p class="text-gray-700 text-lg">
+                Diese Website verwendet <strong>keine Tracking-Cookies</strong>, <strong>keine Analytics-Tools</strong> und <strong>keine Werbe-Cookies</strong>. 
+                Ihre Privatsphäre wird respektiert.
+            </p>
+        </div>
+
         <!-- 1. Impressum Section -->
         <span class="section-anchor" id="imprint"></span>
         <section class="bg-white p-8 rounded-xl shadow-lg mb-12">
             <h2 class="text-3xl font-bold mb-6 border-b pb-2 dynamic-accent">Impressum (Angaben gemäß § 5 TMG)</h2>
             
             <div class="space-y-4">
-                <!-- Your imprint content remains the same -->
                 <h3 class="text-xl font-semibold mt-6">Dienstanbieter</h3>
                 <p>
                     Ahmad Katkhuda<br>
-                    Freiberuflers<br>
+                    Freiberufler<br>
                     Hamburg, Deutschland
                 </p>
 
@@ -82,9 +103,6 @@
                     Ahmad Katkhuda<br>
                 </p>
             </div>
-            <p class="mt-8 text-sm text-gray-500 border-t pt-4">
-                Hinweis: Bitte ersetzen Sie die Platzhalter in Klammern durch Ihre tatsächlichen und vollständigen Kontaktdaten und rechtlichen Informationen.
-            </p>
         </section>
 
         <!-- 2. Datenschutzerklärung Section -->
@@ -93,15 +111,65 @@
             <h2 class="text-3xl font-bold mb-6 border-b pb-2 dynamic-accent">Datenschutzerklärung</h2>
             
             <div class="space-y-6 text-gray-700">
-                <!-- Your privacy content remains the same -->
                 <h3 class="text-2xl font-semibold mt-6">1. Datenschutz auf einen Blick</h3>
                 <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
                 
-                <!-- ... rest of your privacy content ... -->
+                <h3 class="text-2xl font-semibold mt-8">2. Verantwortliche Stelle</h3>
+                <p>Verantwortliche Stelle im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p>
+                <p class="bg-gray-50 p-4 rounded-lg mt-2">
+                    Ahmad Katkhuda<br>
+                    Hamburg, Deutschland<br>
+                    E-Mail: ahmad.katkhuda@outlook.de
+                </p>
+
+                <h3 class="text-2xl font-semibold mt-8">3. Datenerfassung auf dieser Website</h3>
+                
+                <h4 class="text-xl font-semibold mt-4 text-green-600">✅ Was wir NICHT tun:</h4>
+                <ul class="list-disc list-inside ml-4 space-y-2 bg-green-50 p-4 rounded-lg">
+                    <li><strong>Keine Cookies:</strong> Diese Website setzt keine Cookies (weder technisch notwendige noch Tracking-Cookies)</li>
+                    <li><strong>Kein Tracking:</strong> Es werden keine Analytics-Tools wie Google Analytics verwendet</li>
+                    <li><strong>Keine Werbung:</strong> Es werden keine Werbe-Cookies oder Tracking-Pixel eingesetzt</li>
+                    <li><strong>Keine Datenweitergabe:</strong> Ihre Daten werden nicht an Dritte weitergegeben</li>
+                    <li><strong>Keine Profilerstellung:</strong> Es findet keine Profilerstellung oder Nutzeranalyse statt</li>
+                </ul>
+
+                <h4 class="text-xl font-semibold mt-6">Server-Log-Dateien</h4>
+                <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>Browsertyp und Browserversion</li>
+                    <li>verwendetes Betriebssystem</li>
+                    <li>Referrer URL</li>
+                    <li>Hostname des zugreifenden Rechners</li>
+                    <li>Uhrzeit der Serveranfrage</li>
+                    <li>IP-Adresse</li>
+                </ul>
+                <p class="mt-2">Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.</p>
+
+                <h3 class="text-2xl font-semibold mt-8">4. Externe Links</h3>
+                <p>Diese Website enthält Links zu externen Websites Dritter. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.</p>
+
+                <h3 class="text-2xl font-semibold mt-8">5. Ihre Rechte</h3>
+                <p>Sie haben jederzeit das Recht auf:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>Auskunft über Ihre gespeicherten personenbezogenen Daten</li>
+                    <li>Berichtigung unrichtiger personenbezogener Daten</li>
+                    <li>Löschung Ihrer personenbezogenen Daten</li>
+                    <li>Einschränkung der Verarbeitung Ihrer personenbezogenen Daten</li>
+                    <li>Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten</li>
+                    <li>Datenübertragbarkeit</li>
+                </ul>
+
+                <h3 class="text-2xl font-semibold mt-8">6. Kontaktaufnahme</h3>
+                <p>Wenn Sie Fragen zum Datenschutz haben, können Sie uns jederzeit unter der im Impressum angegebenen Adresse kontaktieren.</p>
             </div>
-            <p class="mt-8 text-sm text-gray-500 border-t pt-4">
-                Dieser Text ist eine generische Vorlage. Bitte konsultieren Sie einen Rechtsbeistand, um eine auf Ihre spezifische Website zugeschnittene, rechtskonforme Datenschutzerklärung zu gewährleisten.
-            </p>
+
+            <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 class="text-lg font-semibold text-blue-800 mb-2">Zusammenfassung:</h4>
+                <p class="text-blue-700">
+                    <strong>Diese Website respektiert Ihre Privatsphäre:</strong> Keine Cookies, kein Tracking, keine Datensammlung. 
+                    Sie können diese Website nutzen, ohne dass personenbezogene Daten von Ihnen erfasst werden.
+                </p>
+            </div>
         </section>
 
     </main>
